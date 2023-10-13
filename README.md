@@ -20,6 +20,9 @@ https://www.interviewbit.com/jdbc-interview-questions/
 https://github.com/sudheerj/angular-interview-questions
 ## React 
 React life cycle methods:-https://www.w3schools.com/react/react_lifecycle.asp
+React hooks:-
+https://medium.com/@AbidKazmi/all-react-hooks-in-one-short-4b0ed4b5a6e4
+
 ## Devops
 ## Hibernates
 ## Python
