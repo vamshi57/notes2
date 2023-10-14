@@ -16,6 +16,8 @@ https://www.interviewbit.com/servlet-interview-questions/
 ### jdbc
 https://www.interviewbit.com/jdbc-interview-questions/
 ## Spring 
+# Spring new rest client 
+https://spring.io/blog/2023/07/13/new-in-spring-6-1-restclient
 ## Angular 
 https://github.com/sudheerj/angular-interview-questions
 ## React 
