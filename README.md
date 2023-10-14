@@ -12,6 +12,8 @@ https://www.javatpoint.com/java-multithreading-interview-questions
 https://www.interviewbit.com/java-collections-interview-questions/
 #### java 8
 https://www.interviewbit.com/java-8-interview-questions/
+##### streams 
+https://github.com/amigoscode/java-streams/
 ## Adv Java
 #### Servlet
 https://www.interviewbit.com/servlet-interview-questions/
