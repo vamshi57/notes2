@@ -20,6 +20,8 @@ https://www.interviewbit.com/jdbc-interview-questions/
 ## Spring 
 #### Spring new rest client 
 https://spring.io/blog/2023/07/13/new-in-spring-6-1-restclient
+##### Spring new rest client sample project
+https://github.com/basanta-spring-boot/spring-new-rest-client/
 ## Angular 
 #### Angular Interview Questions
 https://github.com/sudheerj/angular-interview-questions
