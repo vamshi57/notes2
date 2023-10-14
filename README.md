@@ -43,3 +43,18 @@ https://medium.com/@AbidKazmi/all-react-hooks-in-one-short-4b0ed4b5a6e4
 ## Jenkines
 ## Design patterns
 ## Python
+## Leetcode
+### All
+https://github.com/gouthampradhan/leetcode
+###### Arrays
+https://medium.com/algorithms-and-leetcode/array-problems-on-leetcode-bb892201dd7f
+###### String
+###### Hash Table
+###### Dynamic Programming
+###### Sorting
+###### Depth First Search
+https://www.programiz.com/dsa/graph-dfs
+###### Breath First Search
+https://www.programiz.com/dsa/graph-bfs
+
+
