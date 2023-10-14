@@ -32,14 +32,14 @@ https://github.com/sudheerj/angular-interview-questions
 https://www.w3schools.com/react/react_lifecycle.asp
 #### React hooks
 https://medium.com/@AbidKazmi/all-react-hooks-in-one-short-4b0ed4b5a6e4
-## Devops
 ## Hibernates
-## Python
-## Kubernates
+## Devops
 ## AWS
 ## Docker
+## Kubernates
 ## Postgres
 ## SQL
 ## Bamboo
 ## Jenkines
 ## Design patterns
+## Python
