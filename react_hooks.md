@@ -1,6 +1,6 @@
 ### useReducer
 
-`import "./App.css";
+import "./App.css";
 import { useReducer } from "react";
 
 const ACTIONS = {
@@ -43,4 +43,3 @@ export function App() {
 }
 
 export default App;
-`
