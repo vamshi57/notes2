@@ -1,5 +1,6 @@
 ### useReducer
 
+```
 import "./App.css";
 import { useReducer } from "react";
 
@@ -43,3 +44,4 @@ export function App() {
 }
 
 export default App;
+```
