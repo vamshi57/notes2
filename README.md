@@ -38,7 +38,8 @@ https://medium.com/@AbidKazmi/all-react-hooks-in-one-short-4b0ed4b5a6e4
 ###### Zero to Hero
 https://github.com/iam-veeramalla/aws-devops-zero-to-hero#readme
 ###### Associate Solution Architech Practice Questions
-https://tutorialsdojo.com/courses/aws-certified-solutions-architect-associate-saa-c03-practice-exams/
+https://tutorialsdojo.com/courses/aws-certified-solutions-architect-associate-saa-c03-practice-exams/ \n
+https://www.knowledgehut.com/practice-tests/aws-solutions-architect-associate
 ## Docker
 ## Kubernates
 ## Postgres
