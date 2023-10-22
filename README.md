@@ -49,6 +49,8 @@ https://www.knowledgehut.com/practice-tests/aws-solutions-architect-associate
 ## SQL
 ## Bamboo
 ## Jenkines
+## Ansible
+https://clouddeepdive.medium.com/ansible-zero-to-hero-with-example-3348c1cd5d50
 ## Design patterns
 ## Python
 ## Leetcode
