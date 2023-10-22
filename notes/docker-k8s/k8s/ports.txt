@@ -1,0 +1,21 @@
+
+ports:
+  protocol:tcp
+  port: ->it self port no of service for internal communication
+  targetport: ->it is used communicates with app-pods port
+  nodePort: ->used expose the port to outside called external port 30000 to ->
+
+#these are used in service 
+
+--------------------------------------------------
+
+#we use is in deployement.yml
+
+ spec:
+      containers:
+      - name: my-nginx
+        image: nginx
+        ports:
+        - containerPort: 80 -->expose container port as pod port
+        
+

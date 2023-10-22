@@ -1,0 +1,105 @@
+
+*) If we create private git account then we should also specify
+  username and password for service access.
+
+spring.cloud.config.server.git.uri=https://gitlab.com/javaraghu2018/myconfigtestnew.git
+spring.cloud.config.server.git.username=abcd@gmail.com
+spring.cloud.config.server.git.password=abcd1234
+
+=> we can even specify that go and select specific profile properties/yml
+   like 
+      application-dev.properties 
+      application-uat.properties 
+      application-prod.properties 
+   then just add below key in config server
+
+   spring.profiles.active=dev
+
+
+*)Exception:
+IllegalArgumentException: Could not resolve placeholder
+     'my.app.title' in value "${my.app.title}
+
+
+Step#1 Vefiry URL using POSTMAN like
+  GET   http://localhost:8888/actuator/refresh  SEND
+
+Check inside Config Server# for exact type of URL
+
+https://gitlab.com/<username>/<projectName>.git
+spring.cloud.config.server.git.uri=https://gitlab.com/javaraghu2018/myconfigtestnew.git
+
+Step#2 Are you using github account?
+=> Giving bugs in Config Server
+
+Step#3 Check for Config Client Dependency added or not at MS#?
+
+Step#4 Check for spaces while reading property
+       @Value("${key}")
+
+==============Native Config ===============================
+ This concept indicates testing local for config server
+ using system drive or Project Folders.
+
+ It is recomanded only for Dev Env only.
+ Never used in production/UAT.
+
+--folder system for config server--- 
+ SpringCloudConfigServer
+   |
+   |-src/main/resources
+      |-myconf
+         |-application.properties    [Config Propf File]
+      |-application.properties 
+
+---data---
+--src/main/resources/application.properties-- 
+server.port=8888
+spring.profiles.active=native
+spring.cloud.config.server.native.search-locations=classpath:/myconf
+#spring.cloud.config.server.native.search-locations=file://D:/myconf
+
+
+--src/main/resources/myconf/application.properties--
+my.app.title=FROM-LOCAL-CONFIG
+
+*) Eureka and MS code is same as before
+===================================================================
+Q) What code modifications required if Config Server IP/PORT is modified?
+A)
+  Create bootstrap.properties file inside MS# (every MS) 
+  and add key=val of Config Server ex:
+    spring.cloud.config.uri=http://localhost:9900
+
+--src/main/resources
+  |--application.properties
+  |--bootstrap.properties
+
+------------------------------------------------------
+Why like that?
+
+=> Our Project is Child Projects
+=> It is connected to Parent project
+=> Our Project has only dependency : Config Client
+   code exist at parent project
+
+=> For every project there will be properties data
+
+   parent project(code) <---application.properties
+         
+   child project(code) <--- application.properties
+
+=>** We want to give input to parent project using child project
+   then we should define bootstrap.properties
+   which is loaded before our application.properties
+   on project-startup(while executing config client)
+
+*** When we start MS# first it will fetch data from config server
+    using config client, then MS# execution is started.
+    So, if we add key inside our application.proerties 
+    which is loaded after config client.
+------------------------------------------------------------
+Q) if same key with diff value added in
+   MS#  and Config Server git location
+   then which one is considered?
+

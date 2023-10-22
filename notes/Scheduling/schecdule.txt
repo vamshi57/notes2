@@ -1,0 +1,207 @@
+Date : 06/11/2020
+				Spring Boot 6PM
+				  Mr. RAGHU
+				----------------
+			   Spring Boot - Scheduling
+
+Scheduling:-
+  Executing a Task based on Period of Time or Point Of time in a loop.
+
+  A Java class#method is getting called by JVM/System multiple times in loop
+  based on some time gap.
+
+Period of Time: (Days/Time Gap)
+ 4hrs
+ 12 Days
+ 6 Months
+
+Point of time: (Exact Start Date/time)
+ 4:00 PM
+ Aug 6th
+ Jan 12th 9AM
+
+--Examples:--
+a) Reports generations in applications.
+b) Bank Statements (Monthly/Weekly)
+c) Credit Card Bills
+d) Stock Market Information
+e) Post Paid Mobile Bill
+f) Greeting to Birthday Messages.
+h) Premium payment Bill Generation
+*) automatic bill pays in GooglePay and PhonePe, Salary credited, wakeup alarms,
+   Scrum meetings : Dialy Updated ...etc
+
+------------------------------------------------------
+*) To implement Scheduling concept in Spring boot use two annotation
+ a) @EnableScheduling at starter class level
+ b) @Scheduled at (Java class) method level
+
+*) @Scheduled needs one input which can be one of given below,
+1) fixedDelay : [Period of Time] 
+   It indicates the exact time gap between last method finish to next method start/call.
+
+*** initialDelay is optional and extra input that is used to specify wait time
+   for 1st method call after starting application.
+
+------------code----------------------------
+## Create Spring Starter Project
+Name : SpringBoot2SchedulingApp
+
+## At Starter class level : @EnableScheduling
+
+## Service code
+
+package in.nareshit.raghu.service;
+
+import java.util.Date;
+
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+@Component
+public class MessageService {
+
+	// public void <Name>() {  .... logic ... } 
+	
+	@Scheduled(initialDelay = 3000, fixedDelay = 5000)
+	public void showMsg() {
+		System.out.println("WELCOME :" + new Date());
+	}
+}
+
+## Run main class
+
+## To Stop Goto Console click on Red color Button
+--------------------------------------------------
+Time Scale:-
+
+    1 MICRO  = 1000 * NANO;
+    1 MILLI  = 1000 * MICRO;
+    1 SECOND = 1000 * MILLI;
+    1 MINUTE = 60 * SECOND;
+    1 HOUR   = 60 * MINUTE;
+    1 DAY    = 24 * HOUR;
+
+*) In Java (JDK 1.5) there is one Enum added ie 'TimeUnit'.
+   It is used to convert data from source to destination Date/Time values.
+
+--Example code--
+package in.nit;
+
+import java.util.concurrent.TimeUnit;
+
+public class Sample {
+
+	public static void main(String[] args) {
+		//TimeUnit.SOURCETYPE.toDestinationMethod(SourceValue);
+		long a = TimeUnit.SECONDS.toMillis(12);
+		System.out.println(a);
+		
+		long b = TimeUnit.DAYS.toSeconds(5);
+		System.out.println(b);
+		
+		long c = TimeUnit.SECONDS.toMinutes(120);
+		System.out.println(c);
+		
+		long d = TimeUnit.HOURS.toNanos(5);
+		System.out.println(d);
+	}
+}
+--------------------------------------------
+
+2) fixedRate: The max time gap between last method call/start time
+                  to next method call/start time.
+		  [Period of Time] 
+
+package in.nareshit.raghu.service;
+
+import java.util.Date;
+
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+@Component
+public class MessageService {
+
+	// public void <Name>() {  .... logic ... } 
+	
+	@Scheduled(initialDelay = 3000, fixedRate = 5000)
+	public void showMsg() {
+		System.out.println("WELCOME :" + new Date());
+	}
+}
+===============================================================
+3) cron expression : 
+  By default it is point of time. It even supports period of time.
+
+=> This is concept given by Linux based scheduling/date-time concept.
+   Same concept also used in Spring boot for task scheduling.
+
+cron syntax:
+       *      *       *      *      *       *
+      SEC    MIN     HRS    DAY    MONTH   WEEK DAY
+      0-59   0-59   0-23   1-31    1-12    SUN-SAT
+
+Symbols used in cron expression
+ *  = any/all/every
+ ,  = possible values
+ -  = range
+ /  = period of time
+ ?  = any/all only works for DAY or WEEK DAY when we specify Month Value.
+
+--- Cron Expressions --------------------------------
+1) 0 0 9 * * *
+Execute task/method -- Every Day 9:00:00 AM 
+
+2) 0 0 18 * * *
+Execute task/method -- Every Day 6:00:00 PM
+
+3) 0 30 6 * * *
+Execute task/method -- Every Day 6:30:00 AM
+
+4) 0 30 6,18  * * *
+Execute task/method 2 times in a day-- 
+   Every Day - 6:30:00 AM and 6:30:00 PM
+
+5) 0 30 * * * *
+Execute task/method- Every hour 30th Minute
+Ex: 7:16 App Started...
+    7:30:00 PM
+    8:30:00 PM
+    9:30:00 PM
+
+6) 0 15 * *  * *
+Execute task/method- Every hour 15th minute
+Ex: 9:00:00 AM app started...
+    9:15:00 AM
+    10:15:00 AM
+    11:15:00 AM
+
+7) 10 * * * * *
+Execute task/method- Every minute 10th Sec 
+Ex: 7:30:00 PM
+    7:31:10 PM
+    7:32:10 PM
+    7:33:10 PM
+
+8) 25 * * * * *
+Execute task/method- Every minute 25th Sec 
+
+------------------------------------------
+package in.nareshit.raghu.service;
+
+import java.util.Date;
+
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+@Component
+public class MessageService {
+
+	//@Scheduled(cron = "10 * * * * *")
+	@Scheduled(cron = "25 * * * * *")
+	public void showMsg() {
+		System.out.println("WELCOME :" + new Date());
+	}
+}
+

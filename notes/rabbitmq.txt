@@ -1,0 +1,11 @@
+sudo apt-get install rabbitmq
+sudo systemctl enable rabbitmq-server
+sudo systemctl start rabbitmq-server
+sudo rabbitmq-plugins enable rabbitmq_management 
+localhost:15672
+sudo rabbitqmctl add_user admin admin
+sudo rabbitmqctk set_user_tags admin administrator
+sudo rabbitmqctl set_permission -p admin "." "." "."
+
+
+

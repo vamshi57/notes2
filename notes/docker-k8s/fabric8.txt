@@ -1,0 +1,4 @@
+mvn clean package fabric8:resource fabric8:build
+mvn fabric8:deploy
+ kubectl get all -n default 
+ 

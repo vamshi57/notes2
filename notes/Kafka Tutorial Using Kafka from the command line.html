@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta name="robots" content="all,follow">
+  <meta name="googlebot" content="index,follow,snippet,archive">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Kafka Tutorial: Using Kafka from the command line</title>
+
+  
+  <meta name="description" content="Kafka Training: Using Kafka from the command line starts up ZooKeeper, and Kafka and then uses Kafka command line tools to create a topic, produce some messages and consume them.">
+  
+
+  <meta name="generator" content="Hugo 0.17">
+
+  <link href="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/css.css" rel="stylesheet" type="text/css">
+
+  
+  <link rel="stylesheet" href="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/font-awesome.css">
+  <link rel="stylesheet" href="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/bootstrap.css">
+
+  
+  <link href="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/animate.css" rel="stylesheet">
+
+  
+  
+    <link href="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/style.css" rel="stylesheet" id="theme-stylesheet">
+  
+
+
+  
+  <link href="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/custom.css" rel="stylesheet">
+
+  
+    
+
+  
+  <link rel="shortcut icon" href="http://cloudurable.com/img/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="http://cloudurable.com/img/apple-touch-icon.png">
+  
+
+  <link href="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/owl.css" rel="stylesheet">
+  <link href="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/owl_002.css" rel="stylesheet">
+
+  <link rel="alternate" href="http://cloudurable.com/index.xml" type="application/rss+xml" title="Cloudurable , Kubernetes &amp; Istio consulting, Kubernetes &amp; Istio training, Cassandra consulting, Kafka consulting, Cassandra training and Cloud DevOps services.">
+
+  
+  <meta property="og:title" content="Kafka Tutorial: Using Kafka from the command line">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="/blog/kafka-tutorial-kafka-from-command-line/index.html/">
+  <meta property="og:image" content="img/logo.png">
+
+<style type="text/css">.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-3npS60y-EvfF7G_lioSx2Q{display:block!important;border:1px solid #cdcfd2!important;background-color:#fff!important;color:#373a3d!important;width:100vw!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-3npS60y-EvfF7G_lioSx2Q .IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-24GeGuJgk9LrMLp7qVvlyz{background:#6a7e89!important;color:#fff!important;padding:10px!important;font-size:18px!important;font-family:sans-serif!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-3npS60y-EvfF7G_lioSx2Q .IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-KVjdulkCFfUZps29EbgAC{background:#f3f6f8!important;border-bottom:1px solid #cdcfd2!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-3npS60y-EvfF7G_lioSx2Q .IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-KVjdulkCFfUZps29EbgAC>*{margin-right:10px!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-3npS60y-EvfF7G_lioSx2Q .IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1OeZ2PQ98oAp6Vc5mMc6V5{list-style:none!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-3npS60y-EvfF7G_lioSx2Q .IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-vCwYmWF_l83ScZBrGnRoi,.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-3npS60y-EvfF7G_lioSx2Q .IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1OeZ2PQ98oAp6Vc5mMc6V5{margin:0!important;padding:0!important;width:100%!important;display:block!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-3npS60y-EvfF7G_lioSx2Q .IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-vCwYmWF_l83ScZBrGnRoi:not(:last-child){border-bottom:1px solid #cdcfd2!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-3npS60y-EvfF7G_lioSx2Q .IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1XQZkb-FlHWABUp4_uShaZ{color:inherit!important;cursor:pointer!important;width:100%!important;display:inline-block!important;margin:10px!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-3npS60y-EvfF7G_lioSx2Q .IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1XTzMvb2XKitWz0mFLlyyp{margin:5px!important;display:block!important;width:auto!important;white-space:pre!important;overflow-x:scroll!important;background:inherit!important;color:inherit!important;font-family:monospace}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-3npS60y-EvfF7G_lioSx2Q .IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1XTzMvb2XKitWz0mFLlyyp:not(.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-39QUvFFn5B7GMcqMQkOXZ3){display:none!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-3npS60y-EvfF7G_lioSx2Q .IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-295DY3nO0DbJWMsOqmjCli{background:#f5f5f5!important;color:#5a5a5a!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-3npS60y-EvfF7G_lioSx2Q.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1aQZwu6CUzAf2zUcI7tg0Q .IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-295DY3nO0DbJWMsOqmjCli{display:none!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-3npS60y-EvfF7G_lioSx2Q .IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-38EPFyKXMtoP12rPlmrHxs{background:#e6f7ff!important;color:#006097!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-3npS60y-EvfF7G_lioSx2Q.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-3W4ZnQjhoGfT1gTNcqRXdi .IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-38EPFyKXMtoP12rPlmrHxs{display:none!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-3npS60y-EvfF7G_lioSx2Q .IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-HGYnfzlmgOZ-l7eANhQe_{background:#fff3ea!important;color:#993a00!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-3npS60y-EvfF7G_lioSx2Q.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-24e52A11B1UIErbKHtBmqc .IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-HGYnfzlmgOZ-l7eANhQe_{display:none!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-3npS60y-EvfF7G_lioSx2Q .IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-jji74ZzulHScD0OAD_G7h{background:#fef2f1!important;color:#b10823!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-3npS60y-EvfF7G_lioSx2Q.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-28jAOA7cDee-95LvwGsOP- .IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-jji74ZzulHScD0OAD_G7h{display:none!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu{background-color:#0073b1!important;border:0!important;border-radius:2px!important;box-sizing:border-box!important;color:#fff!important;cursor:pointer!important;display:inline-block!important;font-family:-apple-system,system-ui,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Fira Sans,Ubuntu,Oxygen,Oxygen Sans,Cantarell,Droid Sans,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Lucida Grande,Helvetica,Arial,sans-serif!important;font-weight:600!important;overflow:hidden!important;outline-width:2px!important;position:relative!important;text-align:center!important;text-decoration:none!important;vertical-align:middle!important;white-space:nowrap!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu:disabled{cursor:not-allowed!important;opacity:.7!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu:not(:disabled):not(.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1zhzkayakwEXovVYUbq5Gy):hover{background-color:#006097!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu:not(:disabled):not(.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1zhzkayakwEXovVYUbq5Gy):active{background-color:#004b7c!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1zhzkayakwEXovVYUbq5Gy{background-color:#fff!important;color:#0073b1!important;box-shadow:inset 0 0 0 1px rgba(0,0,0,.3)!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1zhzkayakwEXovVYUbq5Gy:not(:disabled):hover{color:#006097!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1zhzkayakwEXovVYUbq5Gy:not(:disabled):active{color:#004b7c!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu>xdoor-icon{display:inline-block!important;height:100%!important;vertical-align:top!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu>xdoor-icon>svg{pointer-events:none!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-7inSbaAsvG5bf7w6lJTEr{font-size:10px!important;height:16px!important;line-height:16px!important;padding:0 6px!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-7inSbaAsvG5bf7w6lJTEr>xdoor-icon{margin-left:-6px!important;margin-right:3px!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-7inSbaAsvG5bf7w6lJTEr>xdoor-icon>svg{height:16px!important;width:16px!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-7inSbaAsvG5bf7w6lJTEr.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-2lrEjt4SOTxqrYsv1piG4c>xdoor-icon{margin-right:-6px!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu,.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-3uCBSbQNVNf2QjqHe1rfb6{font-size:11px!important;height:20px!important;line-height:20px!important;padding:0 7px!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-3uCBSbQNVNf2QjqHe1rfb6>xdoor-icon,.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu>xdoor-icon{margin-left:-7px!important;margin-right:3.5px!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-3uCBSbQNVNf2QjqHe1rfb6>xdoor-icon>svg,.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu>xdoor-icon>svg{height:20px!important;width:20px!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-3uCBSbQNVNf2QjqHe1rfb6.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-2lrEjt4SOTxqrYsv1piG4c>xdoor-icon,.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-2lrEjt4SOTxqrYsv1piG4c>xdoor-icon{margin-right:-7px!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-21Smv9YG-5V6M6KP-5v2WG{font-size:14px!important;height:24px!important;line-height:24px!important;padding:0 12px!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-21Smv9YG-5V6M6KP-5v2WG>xdoor-icon{margin-left:-12px!important;margin-right:6px!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-21Smv9YG-5V6M6KP-5v2WG>xdoor-icon>svg{height:24px!important;width:24px!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-21Smv9YG-5V6M6KP-5v2WG.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-2lrEjt4SOTxqrYsv1piG4c>xdoor-icon{margin-right:-12px!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1TGdQUTLZdNG4R87OfAB-q{font-size:16px!important;height:32px!important;line-height:32px!important;padding:0 16px!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1TGdQUTLZdNG4R87OfAB-q>xdoor-icon{margin-left:-16px!important;margin-right:8px!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1TGdQUTLZdNG4R87OfAB-q>xdoor-icon>svg{height:32px!important;width:32px!important}.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1TGdQUTLZdNG4R87OfAB-q.IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-2lrEjt4SOTxqrYsv1piG4c>xdoor-icon{margin-right:-16px!important}</style><script src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/sdk.js" async="" crossorigin="anonymous"></script><script async="true" defer="true" src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/FollowCompany.js"></script><script type="text/javascript" charset="UTF-8" src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/common.js"></script><script type="text/javascript" charset="UTF-8" src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/util.js"></script><style type="text/css" data-fbcssmodules="css:fb.css.base css:fb.css.dialog css:fb.css.iframewidget css:fb.css.customer_chat_plugin_iframe">.fb_hidden{position:absolute;top:-10000px;z-index:10001}.fb_reposition{overflow:hidden;position:relative}.fb_invisible{display:none}.fb_reset{background:none;border:0;border-spacing:0;color:#000;cursor:auto;direction:ltr;font-family:"lucida grande", tahoma, verdana, arial, sans-serif;font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;letter-spacing:normal;line-height:1;margin:0;overflow:visible;padding:0;text-align:left;text-decoration:none;text-indent:0;text-shadow:none;text-transform:none;visibility:visible;white-space:normal;word-spacing:normal}.fb_reset>div{overflow:hidden}@keyframes fb_transform{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}.fb_animate{animation:fb_transform .3s forwards}
+.fb_dialog{background:rgba(82, 82, 82, .7);position:absolute;top:-10000px;z-index:10001}.fb_dialog_advanced{border-radius:8px;padding:10px}.fb_dialog_content{background:#fff;color:#373737}.fb_dialog_close_icon{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 0 transparent;cursor:pointer;display:block;height:15px;position:absolute;right:18px;top:17px;width:15px}.fb_dialog_mobile .fb_dialog_close_icon{left:5px;right:auto;top:5px}.fb_dialog_padding{background-color:transparent;position:absolute;width:1px;z-index:-1}.fb_dialog_close_icon:hover{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -15px transparent}.fb_dialog_close_icon:active{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -30px transparent}.fb_dialog_iframe{line-height:0}.fb_dialog_content .dialog_title{background:#6d84b4;border:1px solid #365899;color:#fff;font-size:14px;font-weight:bold;margin:0}.fb_dialog_content .dialog_title>span{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/yd/r/Cou7n-nqK52.gif) no-repeat 5px 50%;float:left;padding:5px 0 7px 26px}body.fb_hidden{height:100%;left:0;margin:0;overflow:visible;position:absolute;top:-10000px;transform:none;width:100%}.fb_dialog.fb_dialog_mobile.loading{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/ya/r/3rhSv5V8j3o.gif) white no-repeat 50% 50%;min-height:100%;min-width:100%;overflow:hidden;position:absolute;top:0;z-index:10001}.fb_dialog.fb_dialog_mobile.loading.centered{background:none;height:auto;min-height:initial;min-width:initial;width:auto}.fb_dialog.fb_dialog_mobile.loading.centered #fb_dialog_loader_spinner{width:100%}.fb_dialog.fb_dialog_mobile.loading.centered .fb_dialog_content{background:none}.loading.centered #fb_dialog_loader_close{clear:both;color:#fff;display:block;font-size:18px;padding-top:20px}#fb-root #fb_dialog_ipad_overlay{background:rgba(0, 0, 0, .4);bottom:0;left:0;min-height:100%;position:absolute;right:0;top:0;width:100%;z-index:10000}#fb-root #fb_dialog_ipad_overlay.hidden{display:none}.fb_dialog.fb_dialog_mobile.loading iframe{visibility:hidden}.fb_dialog_mobile .fb_dialog_iframe{position:sticky;top:0}.fb_dialog_content .dialog_header{background:linear-gradient(from(#738aba), to(#2c4987));border-bottom:1px solid;border-color:#043b87;box-shadow:white 0 1px 1px -1px inset;color:#fff;font:bold 14px Helvetica, sans-serif;text-overflow:ellipsis;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0;vertical-align:middle;white-space:nowrap}.fb_dialog_content .dialog_header table{height:43px;width:100%}.fb_dialog_content .dialog_header td.header_left{font-size:12px;padding-left:5px;vertical-align:middle;width:60px}.fb_dialog_content .dialog_header td.header_right{font-size:12px;padding-right:5px;vertical-align:middle;width:60px}.fb_dialog_content .touchable_button{background:linear-gradient(from(#4267B2), to(#2a4887));background-clip:padding-box;border:1px solid #29487d;border-radius:3px;display:inline-block;line-height:18px;margin-top:3px;max-width:85px;padding:4px 12px;position:relative}.fb_dialog_content .dialog_header .touchable_button input{background:none;border:none;color:#fff;font:bold 12px Helvetica, sans-serif;margin:2px -12px;padding:2px 6px 3px 6px;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0}.fb_dialog_content .dialog_header .header_center{color:#fff;font-size:16px;font-weight:bold;line-height:18px;text-align:center;vertical-align:middle}.fb_dialog_content .dialog_content{background:url(https://static.xx.fbcdn.net/rsrc.php/v3/y9/r/jKEcVPZFk-2.gif) no-repeat 50% 50%;border:1px solid #4a4a4a;border-bottom:0;border-top:0;height:150px}.fb_dialog_content .dialog_footer{background:#f5f6f7;border:1px solid #4a4a4a;border-top-color:#ccc;height:40px}#fb_dialog_loader_close{float:left}.fb_dialog.fb_dialog_mobile .fb_dialog_close_icon{visibility:hidden}#fb_dialog_loader_spinner{animation:rotateSpinner 1.2s linear infinite;background-color:transparent;background-image:url(https://static.xx.fbcdn.net/rsrc.php/v3/yD/r/t-wz8gw1xG1.png);background-position:50% 50%;background-repeat:no-repeat;height:24px;width:24px}@keyframes rotateSpinner{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+.fb_iframe_widget{display:inline-block;position:relative}.fb_iframe_widget span{display:inline-block;position:relative;text-align:justify}.fb_iframe_widget iframe{position:absolute}.fb_iframe_widget_fluid_desktop,.fb_iframe_widget_fluid_desktop span,.fb_iframe_widget_fluid_desktop iframe{max-width:100%}.fb_iframe_widget_fluid_desktop iframe{min-width:220px;position:relative}.fb_iframe_widget_lift{z-index:1}.fb_iframe_widget_fluid{display:inline}.fb_iframe_widget_fluid span{width:100%}
+.fb_mpn_mobile_landing_page_slide_out{animation-duration:200ms;animation-name:fb_mpn_landing_page_slide_out;transition-timing-function:ease-in}.fb_mpn_mobile_landing_page_slide_out_from_left{animation-duration:200ms;animation-name:fb_mpn_landing_page_slide_out_from_left;transition-timing-function:ease-in}.fb_mpn_mobile_landing_page_slide_up{animation-duration:500ms;animation-name:fb_mpn_landing_page_slide_up;transition-timing-function:ease-in}.fb_mpn_mobile_bounce_in{animation-duration:300ms;animation-name:fb_mpn_bounce_in;transition-timing-function:ease-in}.fb_mpn_mobile_bounce_out{animation-duration:300ms;animation-name:fb_mpn_bounce_out;transition-timing-function:ease-in}.fb_mpn_mobile_bounce_out_v2{animation-duration:300ms;animation-name:fb_mpn_fade_out;transition-timing-function:ease-in}.fb_customer_chat_bounce_in_v2{animation-duration:300ms;animation-name:fb_bounce_in_v2;transition-timing-function:ease-in}.fb_customer_chat_bounce_in_from_left{animation-duration:300ms;animation-name:fb_bounce_in_from_left;transition-timing-function:ease-in}.fb_customer_chat_bounce_out_v2{animation-duration:300ms;animation-name:fb_bounce_out_v2;transition-timing-function:ease-in}.fb_customer_chat_bounce_out_from_left{animation-duration:300ms;animation-name:fb_bounce_out_from_left;transition-timing-function:ease-in}.fb_customer_chat_bubble_animated_no_badge{box-shadow:0 3px 12px rgba(0, 0, 0, .15);transition:box-shadow 150ms linear}.fb_customer_chat_bubble_animated_no_badge:hover{box-shadow:0 5px 24px rgba(0, 0, 0, .3)}.fb_customer_chat_bubble_animated_with_badge{box-shadow:-5px 4px 14px rgba(0, 0, 0, .15);transition:box-shadow 150ms linear}.fb_customer_chat_bubble_animated_with_badge:hover{box-shadow:-5px 8px 24px rgba(0, 0, 0, .2)}.fb_invisible_flow{display:inherit;height:0;overflow-x:hidden;width:0}.fb_new_ui_mobile_overlay_active{overflow:hidden}@keyframes fb_mpn_landing_page_slide_in{0%{border-radius:50%;margin:0 24px;width:60px}40%{border-radius:18px}100%{margin:0 12px;width:100% - 24px}}@keyframes fb_mpn_landing_page_slide_in_from_left{0%{border-radius:50%;left:12px;margin:0 24px;width:60px}40%{border-radius:18px}100%{left:12px;margin:0 12px;width:100% - 24px}}@keyframes fb_mpn_landing_page_slide_out{0%{margin:0 12px;width:100% - 24px}60%{border-radius:18px}100%{border-radius:50%;margin:0 24px;width:60px}}@keyframes fb_mpn_landing_page_slide_out_from_left{0%{left:12px;width:100% - 24px}60%{border-radius:18px}100%{border-radius:50%;left:12px;width:60px}}@keyframes fb_mpn_landing_page_slide_up{0%{bottom:0;opacity:0}100%{bottom:24px;opacity:1}}@keyframes fb_mpn_bounce_in{0%{opacity:.5;top:100%}100%{opacity:1;top:0}}@keyframes fb_mpn_fade_out{0%{bottom:30px;opacity:1}100%{bottom:0;opacity:0}}@keyframes fb_mpn_bounce_out{0%{opacity:1;top:0}100%{opacity:.5;top:100%}}@keyframes fb_bounce_in_v2{0%{opacity:0;transform:scale(0, 0);transform-origin:bottom right}50%{transform:scale(1.03, 1.03);transform-origin:bottom right}100%{opacity:1;transform:scale(1, 1);transform-origin:bottom right}}@keyframes fb_bounce_in_from_left{0%{opacity:0;transform:scale(0, 0);transform-origin:bottom left}50%{transform:scale(1.03, 1.03);transform-origin:bottom left}100%{opacity:1;transform:scale(1, 1);transform-origin:bottom left}}@keyframes fb_bounce_out_v2{0%{opacity:1;transform:scale(1, 1);transform-origin:bottom right}100%{opacity:0;transform:scale(0, 0);transform-origin:bottom right}}@keyframes fb_bounce_out_from_left{0%{opacity:1;transform:scale(1, 1);transform-origin:bottom left}100%{opacity:0;transform:scale(0, 0);transform-origin:bottom left}}@keyframes fb_bounce_out_v2_mobile_chat_started{0%{opacity:1;top:0}100%{opacity:0;top:20px}}@keyframes fb_customer_chat_bubble_bounce_in_animation{0%{bottom:6pt;opacity:0;transform:scale(0, 0);transform-origin:center}70%{bottom:18pt;opacity:1;transform:scale(1.2, 1.2)}100%{transform:scale(1, 1)}}@keyframes slideInFromBottom{0%{opacity:.1;transform:translateY(100%)}100%{opacity:1;transform:translateY(0)}}@keyframes slideInFromBottomDelay{0%{opacity:0;transform:translateY(100%)}97%{opacity:0;transform:translateY(100%)}100%{opacity:1;transform:translateY(0)}}</style><script charset="utf-8" src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/button.js"></script></head>
+
+
+  <body>
+
+    <div id="all">
+
+        <header>
+
+          <div class="navbar-affixed-top affix-top" data-spy="affix" data-offset-top="200">
+
+    <div class="navbar navbar-default yamm" role="navigation" id="navbar">
+
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand home" href="http://cloudurable.com/">
+                    <img src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/logo.png" alt="Kafka Tutorial: Using Kafka from the command line logo" class="hidden-xs hidden-sm">
+                    <img src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/logo-small.png" alt="Kafka Tutorial: Using Kafka from the command line logo" class="visible-xs visible-sm">
+                    <span class="sr-only">Kafka Tutorial: Using Kafka from the command line - go to homepage</span>
+                </a>
+                <div class="navbar-buttons">
+                    <button type="button" class="navbar-toggle btn-template-main" data-toggle="collapse" data-target="#navigation">
+                        <span class="sr-only">Toggle navigation</span>
+                        <i class="fa fa-align-justify"></i>
+                    </button>
+                </div>
+            </div>
+            
+
+            <div class="navbar-collapse collapse" id="navigation">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li class="dropdown">
+                        <a href="http://cloudurable.com/index.html">Home</a>
+                    </li>
+                    
+                    <li class="dropdown">
+                        <a href="http://cloudurable.com/services/index.html">Services</a>
+                    </li>
+                    
+                    <li class="dropdown">
+                        <a href="http://cloudurable.com/training/index.html">Training</a>
+                    </li>
+                    
+                    <li class="dropdown">
+                        <a href="http://cloudurable.com/kafka-training/index.html">Kafka training</a>
+                    </li>
+                    
+                    <li class="dropdown">
+                        <a href="http://cloudurable.com/blog/index.html">Blog</a>
+                    </li>
+                    
+                    <li class="dropdown">
+                        <a href="http://cloudurable.com/contact/index.html">Contact</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            
+
+            <div class="collapse clearfix" id="search">
+
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search">
+                        <span class="input-group-btn">
+
+                    <button type="submit" class="btn btn-template-main"><i class="fa fa-search"></i></button>
+
+                </span>
+                    </div>
+                </form>
+
+            </div>
+            
+
+        </div>
+    </div>
+    
+
+</div>
+
+
+
+
+        </header>
+
+        <div id="heading-breadcrumbs">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Kafka Tutorial: Using Kafka from the command line</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+        <div id="content">
+            <div class="container">
+
+                <div class="row">
+
+                    
+
+                    <div class="col-md-9" id="blog-post">
+
+
+                        <p class="text-muted  mb-small text-right">May 13, 2017</p>
+
+                        <div id="post-content">
+                          
+                <script src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/cbgapi.loaded_1" async=""></script><script src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/cbgapi.loaded_0" async=""></script><script id="facebook-jssdk" src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/sdk_002.js"></script><script async="" src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/analytics.js"></script><span class="IN-widget" style="display: inline-block; line-height: 1; vertical-align: bottom; padding: 0px; margin: 0px; text-indent: 0px; text-align: center;" data-lnkd-debug="&lt;script type=&quot;IN/Share+init&quot; data-counter=&quot;right&quot;&gt;&lt;/script&gt;"><span style="padding: 0px !important; margin: 0px !important; text-indent: 0px !important; display: inline-block !important; vertical-align: bottom !important; font-size: 1px !important;"><button class="IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu"><xdoor-icon aria-hidden="true"><svg viewBox="0 0 24 24" width="24px" height="24px" x="0" y="0" preserveAspectRatio="xMinYMin meet">
+      <g style="fill: currentColor">
+        <rect x="-0.003" style="fill:none;" width="24" height="24"></rect>
+        <path style="" d="M20,2h-16c-1.1,0-2,0.9-2,2v16c0,1.1,0.9,2,2,2h16c1.1,0,2-0.9,2-2V4C22,2.9,21.1,2,20,2zM8,19h-3v-9h3V19zM6.5,8.8C5.5,8.8,4.7,8,4.7,7s0.8-1.8,1.8-1.8S8.3,6,8.3,7S7.5,8.8,6.5,8.8zM19,19h-3v-4c0-1.4-0.6-2-1.5-2c-1.1,0-1.5,0.8-1.5,2.2V19h-3v-9h2.9v1.1c0.5-0.7,1.4-1.3,2.6-1.3c2.3,0,3.5,1.1,3.5,3.7V19z"></path>
+      </g>
+    </svg></xdoor-icon>Share</button></span></span>
+                <iframe id="twitter-widget-1" scrolling="no" allowtransparency="true" allowfullscreen="true" class="twitter-share-button twitter-share-button-rendered twitter-tweet-button" style="position: static; visibility: visible; width: 60px; height: 20px;" title="Twitter Tweet Button" src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/tweet_button.html" frameborder="0"></iframe>
+                <div style="position: absolute; width: 450px; left: -10000px;" id="___plus_0"><iframe ng-non-bindable="" hspace="0" marginheight="0" marginwidth="0" scrolling="no" style="position:absolute;top:-10000px;width:450px;margin:0px;border-style:none" tabindex="0" vspace="0" id="I0_1625039628676" name="I0_1625039628676" src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/sharebutton.html" data-gapiattached="true" width="100%" frameborder="0"></iframe></div><div class="g-plus" data-action="share" data-gapiscan="true" data-onload="true" data-gapistub="true"></div>
+                <div style="position: absolute; width: 450px; left: -10000px;" id="___plusone_0"><iframe ng-non-bindable="" hspace="0" marginheight="0" marginwidth="0" scrolling="no" style="position:absolute;top:-10000px;width:450px;margin:0px;border-style:none" tabindex="0" vspace="0" id="I3_1625039628687" name="I3_1625039628687" src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/fastbutton.html" data-gapiattached="true" width="100%" frameborder="0"></iframe></div><div class="g-plusone" data-size="medium" data-annotation="inline" data-width="25" data-gapiscan="true" data-onload="true" data-gapistub="true"></div>
+                <script type="text/javascript" src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/buttonlite.js"></script>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="fb-like fb_iframe_widget" data-href="http://cloudurable.com/blog/kafka-tutorial/index.html" data-layout="button_count" data-action="like" data-size="small" data-show-faces="true" data-share="true" fb-xfbml-state="rendered" fb-iframe-plugin-query="action=like&amp;app_id=&amp;container_width=720&amp;href=http%3A%2F%2Fcloudurable.com%2Fblog%2Fkafka-tutorial%2Findex.html&amp;layout=button_count&amp;locale=en_US&amp;sdk=joey&amp;share=true&amp;show_faces=true&amp;size=small"><span style="vertical-align: bottom; width: 150px; height: 28px;"><iframe name="f3a0bce0de5defa" data-testid="fb:like Facebook Social Plugin" title="fb:like Facebook Social Plugin" allowtransparency="true" allowfullscreen="true" scrolling="no" allow="encrypted-media" style="border: medium none; visibility: visible; width: 150px; height: 28px;" src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/like.html" class="" width="1000px" height="1000px" frameborder="0"></iframe></span></div>
+
+                          
+
+<p>If you are not sure what Kafka is, start here <a href="http://cloudurable.com/blog/what-is-kafka/index.html">“What is Kafka?”</a>.</p>
+
+<h2 id="getting-started-with-kafka-tutorial">Getting started with Kafka tutorial</h2>
+
+<p>Let’s show a simple example using producers and consumers from the Kafka command line.</p>
+
+<p>Download Kafka 0.10.2.x from the <a href="https://kafka.apache.org/downloads" target="_blank">Kafka download page</a>. Later versions will likely work, but this was example was done with 0.10.2.x.</p>
+
+<p>We assume that you have Java SDK 1.8.x installed.</p>
+
+<p>We unzipped the Kafka download and put it in <code>~/kafka-training/</code>, and
+then renamed the Kafka install folder to <code>kafka</code>. Please do the same.</p>
+
+<p>Next, we are going to run <em>ZooKeeper</em> and then run <em>Kafka Server/Broker</em>.
+We will use some Kafka command line utilities, to create Kafka topics,
+send messages via a producer and consume messages from the command line.</p>
+
+<p><br></p>
+
+<h3 id="run-zookeeper-for-kafka">Run ZooKeeper for Kafka</h3>
+
+<p>Kafka relies on ZooKeeper. To keep things simple, we will use a single ZooKeeper node.</p>
+
+<p>Kafka provides a startup script for ZooKeeper called <code>zookeeper-server-start.sh</code>
+which is located at <code>~/kafka-training/kafka/bin/zookeeper-server-start.sh</code>.</p>
+
+<p>The Kafka distribution also provide a ZooKeeper config file which is setup to run single node.</p>
+
+<p>To run ZooKeeper, we create this script in <code>kafka-training</code> and run it.</p>
+
+<p><br></p>
+
+<h4 id="kafka-training-run-zookeeper-sh">~/kafka-training/run-zookeeper.sh</h4>
+
+<pre><code class="language-sh">#!/usr/bin/env bash
+cd ~/kafka-training
+
+kafka/bin/zookeeper-server-start.sh \
+   kafka/config/zookeeper.properties
+</code></pre>
+
+<p><br></p>
+
+<h4 id="run-run-zookeeper-sh">Run run-zookeeper.sh</h4>
+
+<pre><code class="language-sh">~/kafka-training
+$ ./run-zookeeper.sh
+</code></pre>
+
+<p><br></p>
+
+<p>Wait about 30 seconds or so for ZooKeeper to startup.</p>
+
+<p><br></p>
+
+<h3 id="run-kafka-server">Run Kafka Server</h3>
+
+<p><a href="http://cloudurable.com/blog/kafka-broker-startup/index.html">Kafka also provides a startup script for the Kafka server</a> called <code>kafka-server-start.sh</code>
+which is located at <code>~/kafka-training/kafka/bin/kafka-server-start.sh</code>.</p>
+
+<p>The Kafka distribution also provide a Kafka config file which is setup to run Kafka single node,
+and points to ZooKeeper running on <code>localhost:2181</code>.</p>
+
+<p>To run Kafka, we create this script in <code>kafka-training</code> and run it in another terminal window.</p>
+
+<p><br></p>
+
+<h4 id="kafka-training-run-kafka-sh">~/kafka-training/run-kafka.sh</h4>
+
+<pre><code class="language-sh">#!/usr/bin/env bash
+cd ~/kafka-training
+
+kafka/bin/kafka-server-start.sh \
+    kafka/config/server.properties
+
+</code></pre>
+
+<p><br></p>
+
+<h4 id="run-run-kafka-sh">Run run-kafka.sh</h4>
+
+<pre><code class="language-sh">~/kafka-training
+$ ./run-kafka.sh
+</code></pre>
+
+<p>Wait about 30 seconds or so for Kafka to startup.</p>
+
+<p>Now let’s create the topic that we will send records on.</p>
+
+<p><br></p>
+
+<h3 id="create-kafka-topic">Create Kafka Topic</h3>
+
+<p>Kafka also provides a utility to work with topics called <code>kafka-topics.sh</code>
+which is located at <code>~/kafka-training/kafka/bin/kafka-topics.sh</code>.</p>
+
+<p>We will use this tool to create a topic called <code>my-topic</code> with a replication factor
+of 1 since we only have one server. We will use thirteen partitions for <code>my-topic</code>,
+which means we could have up to 13 Kafka consumers.</p>
+
+<p>To run Kafka, create this script in <code>kafka-training\lab1</code>, and run it in another terminal window.</p>
+
+<blockquote>
+<p>Cloudurable provides <a href="http://cloudurable.com/kafka-training/index.html" title="Apache Kafka Training Course, Instructor led, onsite training">Kafka training</a>, <a href="http://cloudurable.com/kafka-aws-consulting/index.html" title="Kafka consulting">Kafka consulting</a>, <a href="http://cloudurable.com/subscription_support/index.html">Kafka support</a> and helps <a href="http://cloudurable.com/services/index.html">setting up Kafka clusters in AWS</a>.</p>
+</blockquote>
+
+<p><br></p>
+
+<h4 id="kafka-training-lab1-create-topic-sh">~/kafka-training/lab1/create-topic.sh</h4>
+
+<pre><code class="language-sh">#!/usr/bin/env bash
+
+cd ~/kafka-training
+
+# Create a topic
+kafka/bin/kafka-topics.sh --create \
+  --zookeeper localhost:2181 \
+  --replication-factor 1 --partitions 13 \
+  --topic my-topic
+
+</code></pre>
+
+<p><br></p>
+
+<h4 id="run-create-topic-sh">Run create-topic.sh</h4>
+
+<pre><code class="language-sh">~/kafka-training/lab1
+
+$ ./create-topic.sh
+
+Created topic "my-topic".
+</code></pre>
+
+<p><br></p>
+
+<p>Notice we created a topic called <code>my-topic</code>.</p>
+
+<p><br></p>
+
+<h4 id="list-topics">List Topics</h4>
+
+<p>You can see which topics that Kafka is managing using <code>kafka-topics.sh</code> as follows.</p>
+
+<p>Create the file in <code>~/kafka-training/lab1/list-topics.sh</code>. and run it.</p>
+
+<p><br></p>
+
+<h4 id="kafka-training-lab1-list-topics-sh">~/kafka-training/lab1/list-topics.sh</h4>
+
+<pre><code class="language-sh">#!/usr/bin/env bash
+
+cd ~/kafka-training
+
+# List existing topics
+kafka/bin/kafka-topics.sh --list \
+    --zookeeper localhost:2181
+
+
+</code></pre>
+
+<p><br></p>
+
+<p>Notice that we have to specify the location of the ZooKeeper cluster node which
+is running on <code>localhost</code> port <code>2181</code>.</p>
+
+<p><br></p>
+
+<h4 id="run-list-topics-sh">Run list-topics.sh</h4>
+
+<pre><code class="language-sh">~/kafka-training/lab1
+$ ./list-topics.sh
+__consumer_offsets
+_schemas
+my-example-topic
+my-example-topic2
+my-topic
+new-employees
+</code></pre>
+
+<p><br></p>
+
+<p>You can see the topic <code>my-topic</code> in the list of topics.</p>
+
+<p><br></p>
+
+<h4 id="run-kafka-producer-console">Run Kafka Producer Console</h4>
+
+<p>The Kafka distribution provides a command utility to send messages from the command line.
+It start up a terminal window where everything you type is sent to the Kafka topic.</p>
+
+<p>Kafka provides the utility <code>kafka-console-producer.sh</code>
+which is located at <code>~/kafka-training/kafka/bin/kafka-console-producer.sh</code> to send
+messages to a topic on the command line.</p>
+
+<p>Create the file in <code>~/kafka-training/lab1/start-producer-console.sh</code> and run it.</p>
+
+<p><br></p>
+
+<h4 id="kafka-training-lab1-start-producer-console-sh">~/kafka-training/lab1/start-producer-console.sh</h4>
+
+<pre><code class="language-sh">#!/usr/bin/env bash
+cd ~/kafka-training
+
+kafka/bin/kafka-console-producer.sh \
+    --broker-list localhost:9092 \
+    --topic my-topic
+
+</code></pre>
+
+<p><br></p>
+
+<p>Notice that we specify the Kafka node which is running at <code>localhost:9092</code>.</p>
+
+<p><br></p>
+
+<h4 id="run-start-producer-console-sh-and-send-at-least-four-messages">Run start-producer-console.sh and send at least four messages</h4>
+
+<pre><code class="language-sh">~/kafka-training/lab1
+$ ./start-producer-console.sh
+This is message 1
+This is message 2
+This is message 3
+Message 4
+Message 5
+</code></pre>
+
+<p><br></p>
+
+<p>In order to see these messages, we will need to run the consumer console.</p>
+
+<p><br></p>
+
+<h4 id="run-kafka-consumer-console">Run Kafka Consumer Console</h4>
+
+<p>The Kafka distribution provides a command utility to see messages from the command line.
+It displays the messages in various modes.</p>
+
+<p>Kafka provides the utility <code>kafka-console-consumer.sh</code>
+which is located at <code>~/kafka-training/kafka/bin/kafka-console-producer.sh</code> to receive
+messages from a topic on the command line.</p>
+
+<p>Create the file in <code>~/kafka-training/lab1/start-consumer-console.sh</code> and run it.</p>
+
+<p><br></p>
+
+<h4 id="kafka-training-lab1-start-producer-console-sh-1">~/kafka-training/lab1/start-producer-console.sh</h4>
+
+<pre><code class="language-sh">#!/usr/bin/env bash
+cd ~/kafka-training
+
+kafka/bin/kafka-console-consumer.sh \
+    --bootstrap-server localhost:9092 \
+    --topic my-topic \
+    --from-beginning
+
+</code></pre>
+
+<p><br></p>
+
+<p>Notice that we specify the Kafka node which is running at <code>localhost:9092</code> like we did before, but
+we also specify to read all of the messages from <code>my-topic</code> from the beginning <code>--from-beginning</code>.</p>
+
+<p><br></p>
+
+<h4 id="run-start-consumer-console-sh-in-another-terminal">Run start-consumer-console.sh in another terminal</h4>
+
+<pre><code class="language-sh">~/kafka-training/lab1
+$ ./start-consumer-console.sh
+Message 4
+This is message 2
+This is message 1
+This is message 3
+Message 5
+Message 6
+Message 7
+</code></pre>
+
+<p><br></p>
+
+<p>Notice that the messages are not coming in order. This is because we only have one consumer so it is reading
+the messages from all 13 partitions. Order is only guaranteed within a partition.</p>
+
+<p><br></p>
+
+<h3 id="review-of-using-kafka-from-the-command-line">Review of using Kafka from the command line</h3>
+
+<h4 id="what-server-do-you-run-first">What server do you run first?</h4>
+
+<p>You need to run ZooKeeper than Kafka.</p>
+
+<h4 id="what-tool-do-you-use-to-create-a-topic">What tool do you use to create a topic?</h4>
+
+<p>kafka-topics.sh</p>
+
+<h4 id="what-tool-do-you-use-to-see-topics">What tool do you use to see topics?</h4>
+
+<p>kafka-topics.sh</p>
+
+<h4 id="what-tool-did-we-use-to-send-messages-on-the-command-line">What tool did we use to send messages on the command line?</h4>
+
+<p>kafka-console-producer.sh</p>
+
+<h4 id="what-tool-did-we-use-to-view-messages-in-a-topic">What tool did we use to view messages in a topic?</h4>
+
+<p>kafka-console-consumer.sh</p>
+
+<h4 id="why-were-the-messages-coming-out-of-order">Why were the messages coming out of order?</h4>
+
+<p>The messages were being sharded among 13 partitions.</p>
+
+<h4 id="how-could-we-get-the-messages-to-come-in-order-from-the-consumer">How could we get the messages to come in order from the consumer?</h4>
+
+<p>We could use only one partition or start up 13 consumers.</p>
+
+<p><br></p>
+
+<h3 id="more-about-kafka">More about Kafka</h3>
+
+<p>To learn  about Kafka see <a href="http://cloudurable.com/blog/kafka-architecture/index.html">Kafka architecture</a>, <a href="http://cloudurable.com/blog/kafka-architecture-topics/index.html">Kafka topic architecture</a> and <a href="http://cloudurable.com/blog/kafka-architecture-producers/index.html">Kafka producer architecture</a>.</p>
+
+<p><br></p>
+
+<h4 id="related-content">Related content</h4>
+
+<ul>
+<li><a href="http://cloudurable.com/blog/what-is-kafka/index.html" title="This article describes what Kafka is. Kafka is a fast, scalable, durable, and fault-tolerant publish-subscribe messaging system, Kafka is used in use cases where JMS, RabbitMQ, and AMQP may not even be considered due to volume and responsiveness. It covers the impact of Kafka, who uses it and why it is important">What is Kafka?</a></li>
+<li><a href="http://cloudurable.com/blog/kafka-architecture/index.html" title="This article discusses the structure of Kafka. Kafka consists of Records, Topics, Consumers, Producers, Brokers, Logs, Partitions, and Clusters. Records can have key, value and timestamp. Kafka Records are immutable. A Kafka Topic is a stream of records - \&quot;/orders\&quot;, \&quot;/user-signups\&quot;. You can think of a Topic as a feed name. It covers the structure of and purpose of topics, log, partition, segments, brokers, producers, and consumers">Kafka Architecture</a></li>
+<li><a href="http://cloudurable.com/blog/kafka-architecture-topics/index.html" title="This article covers some lower level details of Kafka topic architecture. It is a continuation of the Kafka Architecture article. This article covers Kafka Topic's Architecture with a discussion of how partitions are used for fail-over and parallel processing.">Kafka Topic Architecture</a></li>
+<li><a href="http://cloudurable.com/blog/kafka-architecture-consumers/index.html" title="Covers Kafka Consumer Architecture with a discussion consumer groups and how record processing is shared among a consumer group as well as failover for Kafka consumers.">Kafka Consumer Architecture</a></li>
+<li><a href="http://cloudurable.com/blog/kafka-architecture-producers/index.html" title="Covers Kafka Producer Architecture with a discussion of how a partition is chosen, producer cadence, and partitioning strategies.">Kafka Producer Architecture</a></li>
+<li><a href="http://cloudurable.com/blog/kafka-architecture-low-level/index.html" title="Discussion of Kafka Architecture regarding low-level design details for scale failover, and recovery.">Kafka Architecture and low level design</a></li>
+<li><a href="http://cloudurable.com/blog/kafka-avro-schema-registry/index.html" title="Covers Kafka Avro serialization and operations of the Schema Registry. Also covers using Avro Schema Evolution with the Schema Registry">Kafka and Schema Registry</a></li>
+<li><a href="http://cloudurable.com/blog/avro/index.html" title="Covers Avro data format, defining schemas, using schemas for Big Data and Data Streaming Architectures with an emphasis on Kafka">Kafka and Avro</a></li>
+<li><a href="http://cloudurable.com/blog/kafka-ecosystem/index.html" title="Kafka Ecosystem: Kafka Core, Kafka Streams, Kafka Connect, Kafka REST Proxy, and the Schema Registry">Kafka Ecosystem</a></li>
+<li><a href="http://cloudurable.com/blog/kafka-vs-jms/index.html" title="Kafka Architecture. Covers Kafka vs. JMS, RabbitMQ and other MOMs.">Kafka vs. JMS</a></li>
+<li><a href="http://cloudurable.com/blog/kinesis-vs-kafka/index.html" title="Kafka Architecture. Compares Kafka to Kinesis.">Kafka versus Kinesis</a></li>
+<li><a href="http://cloudurable.com/blog/kafka-tutorial-kafka-from-command-line/index.html" title="Kafka Training: Using Kafka from the command line starts up ZooKeeper, and Kafka and then uses Kafka command line tools to create a topic, produce some messages and consume them.">Kafka Tutorial: Using Kafka from the command line</a></li>
+<li><a href="http://cloudurable.com/blog/kafka-tutorial-kafka-failover-kafka-cluster/index.html" title="Kafka Tutorial: Covers creating a replicated topic. Then demonstrates Kafka consumer failover and Kafka broker failover. Also demonstrates load balancing Kafka consumers. Article shows how, with many groups, Kafka acts like a Publish/Subscribe message broker. But, when we put all of our consumers in the same group, Kafka will load share the messages to the consumers in the same group like a queue.">Kafka Tutorial: Kafka Broker Failover and Consumer Failover</a></li>
+<li><a href="http://cloudurable.com/ppt/kafka-tutorial-cloudruable-v2.pdf" title="PDF slides for a Kafka Tutorial">Kafka Tutorial</a></li>
+<li><a href="http://cloudurable.com/blog/kafka-tutorial-kafka-producer/index.html" title="Kafka Tutorial: Covers creating a Kafka Producer in Java and shows a Java Kafka Producer Example">Kafka Tutorial: Writing a Kafka Producer example in Java</a></li>
+<li><a href="http://cloudurable.com/blog/kafka-tutorial-kafka-consumer/index.html" title="Kafka Tutorial: Covers creating a Kafka Consumer in Java and shows a Java Kafka Consumer Example">Kafka Tutorial: Writing a Kafka Consumer example in Java</a></li>
+<li><a href="http://cloudurable.com/blog/kafka-architecture-log-compaction/index.html">Kafka Architecture: Log Compaction</a></li>
+</ul>
+
+<p><br></p>
+
+<h4 id="about-cloudurable">About Cloudurable</h4>
+
+<p>We hope you enjoyed this article. Please provide <a href="http://cloudurable.com/contact/index.html">feedback</a>.
+Cloudurable provides <a href="http://cloudurable.com/kafka-training/index.html" title="Onsite, Instructor-Led, Kafka Training">Kafka training</a>, <a href="http://cloudurable.com/kafka-aws-consulting/index.html">Kafka consulting</a>, <a href="http://cloudurable.com/subscription_support/index.html">Kafka support</a> and helps <a href="http://cloudurable.com/services/index.html">setting up Kafka clusters in AWS</a>.</p>
+
+<p>Check out our new GoLang course. We provide <a href="http://cloudurable.com/golang-onsite-instructor-led-training/index.html" title="Onsite Golang Training which is instructor led">onsite Go Lang training which is instructor led</a>.</p>
+
+                          
+                <span class="IN-widget" style="display: inline-block; line-height: 1; vertical-align: bottom; padding: 0px; margin: 0px; text-indent: 0px; text-align: center;" data-lnkd-debug="&lt;script type=&quot;IN/Share+init&quot; data-counter=&quot;right&quot;&gt;&lt;/script&gt;"><span style="padding: 0px !important; margin: 0px !important; text-indent: 0px !important; display: inline-block !important; vertical-align: bottom !important; font-size: 1px !important;"><button class="IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu"><xdoor-icon aria-hidden="true"><svg viewBox="0 0 24 24" width="24px" height="24px" x="0" y="0" preserveAspectRatio="xMinYMin meet">
+      <g style="fill: currentColor">
+        <rect x="-0.003" style="fill:none;" width="24" height="24"></rect>
+        <path style="" d="M20,2h-16c-1.1,0-2,0.9-2,2v16c0,1.1,0.9,2,2,2h16c1.1,0,2-0.9,2-2V4C22,2.9,21.1,2,20,2zM8,19h-3v-9h3V19zM6.5,8.8C5.5,8.8,4.7,8,4.7,7s0.8-1.8,1.8-1.8S8.3,6,8.3,7S7.5,8.8,6.5,8.8zM19,19h-3v-4c0-1.4-0.6-2-1.5-2c-1.1,0-1.5,0.8-1.5,2.2V19h-3v-9h2.9v1.1c0.5-0.7,1.4-1.3,2.6-1.3c2.3,0,3.5,1.1,3.5,3.7V19z"></path>
+      </g>
+    </svg></xdoor-icon>Share</button></span></span>
+                <iframe id="twitter-widget-2" scrolling="no" allowtransparency="true" allowfullscreen="true" class="twitter-share-button twitter-share-button-rendered twitter-tweet-button" style="position: static; visibility: visible; width: 60px; height: 20px;" title="Twitter Tweet Button" src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/tweet_button_002.html" frameborder="0"></iframe>
+                <div style="position: absolute; width: 450px; left: -10000px;" id="___plus_1"><iframe ng-non-bindable="" hspace="0" marginheight="0" marginwidth="0" scrolling="no" style="position:absolute;top:-10000px;width:450px;margin:0px;border-style:none" tabindex="0" vspace="0" id="I1_1625039628680" name="I1_1625039628680" src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/sharebutton_002.html" data-gapiattached="true" width="100%" frameborder="0"></iframe></div><div class="g-plus" data-action="share" data-gapiscan="true" data-onload="true" data-gapistub="true"></div>
+                <div style="position: absolute; width: 450px; left: -10000px;" id="___plusone_1"><iframe ng-non-bindable="" hspace="0" marginheight="0" marginwidth="0" scrolling="no" style="position:absolute;top:-10000px;width:450px;margin:0px;border-style:none" tabindex="0" vspace="0" id="I4_1625039628689" name="I4_1625039628689" src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/fastbutton_002.html" data-gapiattached="true" width="100%" frameborder="0"></iframe></div><div class="g-plusone" data-size="medium" data-annotation="inline" data-width="25" data-gapiscan="true" data-onload="true" data-gapistub="true"></div>
+                <script type="text/javascript" src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/buttonlite.js"></script>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="fb-like fb_iframe_widget" data-href="http://cloudurable.com/blog/kafka-tutorial/index.html" data-layout="button_count" data-action="like" data-size="small" data-show-faces="true" data-share="true" fb-xfbml-state="rendered" fb-iframe-plugin-query="action=like&amp;app_id=&amp;container_width=720&amp;href=http%3A%2F%2Fcloudurable.com%2Fblog%2Fkafka-tutorial%2Findex.html&amp;layout=button_count&amp;locale=en_US&amp;sdk=joey&amp;share=true&amp;show_faces=true&amp;size=small"><span style="vertical-align: bottom; width: 150px; height: 28px;"><iframe name="f395f6f2b263cde" data-testid="fb:like Facebook Social Plugin" title="fb:like Facebook Social Plugin" allowtransparency="true" allowfullscreen="true" scrolling="no" allow="encrypted-media" style="border: medium none; visibility: visible; width: 150px; height: 28px;" src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/like_002.html" class="" width="1000px" height="1000px" frameborder="0"></iframe></span></div>
+
+                        </div>
+                        
+                        
+
+                    </div>
+                    
+
+                    
+
+                    
+
+                    <div class="col-md-3">
+
+                        
+
+                        
+
+<div class="panel panel-default sidebar-menu">
+
+    <div class="panel-heading">
+        <h3 class="panel-title">Search</h3>
+    </div>
+
+    <div class="panel-body">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" role="search">
+            <div class="input-group">
+                <input type="search" name="q" results="0" class="form-control" placeholder="Search">
+                <input type="hidden" name="q" value="site:http://cloudurable.com/">
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-template-main"><i class="fa fa-search"></i></button>
+                </span>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+<div class="panel panel-default sidebar-menu">
+<div class="panel-heading">
+    <h3 class="panel-title">Share</h3>
+</div>
+
+<div class="panel-body">
+
+           <ul class="nav nav-pills nav-stacked">
+              <li><iframe id="twitter-widget-3" scrolling="no" allowtransparency="true" allowfullscreen="true" class="twitter-share-button twitter-share-button-rendered twitter-tweet-button" style="position: static; visibility: visible; width: 60px; height: 20px;" title="Twitter Tweet Button" src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/tweet_button_003.html" frameborder="0"></iframe></li>
+
+              <li><span class="IN-widget" style="display: inline-block; line-height: 1; vertical-align: bottom; padding: 0px; margin: 0px; text-indent: 0px; text-align: center;" data-lnkd-debug="&lt;script type=&quot;IN/Share+init&quot; data-counter=&quot;right&quot;&gt;&lt;/script&gt;"><span style="padding: 0px !important; margin: 0px !important; text-indent: 0px !important; display: inline-block !important; vertical-align: bottom !important; font-size: 1px !important;"><button class="IN-6d5494f8-69f0-4a9d-8c6b-3e3c3eb1b33b-1G9ISYhSF8XoOmdcl0yKDu"><xdoor-icon aria-hidden="true"><svg viewBox="0 0 24 24" width="24px" height="24px" x="0" y="0" preserveAspectRatio="xMinYMin meet">
+      <g style="fill: currentColor">
+        <rect x="-0.003" style="fill:none;" width="24" height="24"></rect>
+        <path style="" d="M20,2h-16c-1.1,0-2,0.9-2,2v16c0,1.1,0.9,2,2,2h16c1.1,0,2-0.9,2-2V4C22,2.9,21.1,2,20,2zM8,19h-3v-9h3V19zM6.5,8.8C5.5,8.8,4.7,8,4.7,7s0.8-1.8,1.8-1.8S8.3,6,8.3,7S7.5,8.8,6.5,8.8zM19,19h-3v-4c0-1.4-0.6-2-1.5-2c-1.1,0-1.5,0.8-1.5,2.2V19h-3v-9h2.9v1.1c0.5-0.7,1.4-1.3,2.6-1.3c2.3,0,3.5,1.1,3.5,3.7V19z"></path>
+      </g>
+    </svg></xdoor-icon>Share</button></span></span></li>
+              <li><div style="position: absolute; width: 450px; left: -10000px;" id="___plus_2"><iframe ng-non-bindable="" hspace="0" marginheight="0" marginwidth="0" scrolling="no" style="position:absolute;top:-10000px;width:450px;margin:0px;border-style:none" tabindex="0" vspace="0" id="I2_1625039628683" name="I2_1625039628683" src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/sharebutton_003.html" data-gapiattached="true" width="100%" frameborder="0"></iframe></div><div class="g-plus" data-action="share" data-annotation="vertical-bubble" data-height="60" data-gapiscan="true" data-onload="true" data-gapistub="true"></div></li>
+              <li><div style="position: absolute; width: 450px; left: -10000px;" id="___plusone_2"><iframe ng-non-bindable="" hspace="0" marginheight="0" marginwidth="0" scrolling="no" style="position:absolute;top:-10000px;width:450px;margin:0px;border-style:none" tabindex="0" vspace="0" id="I5_1625039628692" name="I5_1625039628692" src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/fastbutton_003.html" data-gapiattached="true" width="100%" frameborder="0"></iframe></div><div class="g-plusone" data-annotation="inline" data-width="300" data-gapiscan="true" data-onload="true" data-gapistub="true"></div></li>
+              <li>facebook</li>
+              <li><div class="fb-like fb_iframe_widget" data-href="http://cloudurable.com/blog/kafka-tutorial/index.html" data-layout="box_count" data-action="like" data-size="small" data-show-faces="false" data-share="true" fb-xfbml-state="rendered" fb-iframe-plugin-query="action=like&amp;app_id=&amp;container_width=718&amp;href=http%3A%2F%2Fcloudurable.com%2Fblog%2Fkafka-tutorial%2Findex.html&amp;layout=box_count&amp;locale=en_US&amp;sdk=joey&amp;share=true&amp;show_faces=false&amp;size=small"><span style="vertical-align: bottom; width: 62px; height: 72px;"><iframe name="f3e525a38a1dc46" data-testid="fb:like Facebook Social Plugin" title="fb:like Facebook Social Plugin" allowtransparency="true" allowfullscreen="true" scrolling="no" allow="encrypted-media" style="border: medium none; visibility: visible; width: 62px; height: 72px;" src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/like_003.html" class="" width="1000px" height="1000px" frameborder="0"></iframe></span></div></li>
+          </ul>
+</div>
+</div>
+
+<div class="panel panel-default sidebar-menu">
+<div class="panel-heading">
+    <h3 class="panel-title">Follow</h3>
+</div>
+
+<div class="panel-body">
+
+           <ul class="nav nav-pills nav-stacked">
+
+              <li><iframe id="twitter-widget-0" scrolling="no" allowtransparency="true" allowfullscreen="true" class="twitter-follow-button twitter-follow-button-rendered" style="position: static; visibility: visible; width: 134px; height: 20px;" title="Twitter Follow Button" src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/follow_button.html" data-screen-name="cloudurable" frameborder="0"></iframe>
+                </li>
+
+              <li><span class="IN-widget" style="display: inline-block; line-height: 1; vertical-align: bottom; padding: 0px; margin: 0px; text-indent: 0px;" data-lnkd-debug="&lt;script type=&quot;IN/FollowCompany+init&quot; data-id=&quot;17964258&quot; data-counter=&quot;top&quot;&gt;&lt;/script&gt;"><iframe id="{&quot;xdOrigin&quot;:&quot;http://cloudurable.com&quot;,&quot;xdChannel&quot;:&quot;48d243eb-e0e5-4c76-b99b-c14fa035d39b&quot;,&quot;framework&quot;:&quot;@linkedin/xdoor-sdk&quot;,&quot;version&quot;:&quot;0.1.154&quot;,&quot;debug&quot;:false}" name="{&quot;xdOrigin&quot;:&quot;http://cloudurable.com&quot;,&quot;xdChannel&quot;:&quot;48d243eb-e0e5-4c76-b99b-c14fa035d39b&quot;,&quot;framework&quot;:&quot;@linkedin/xdoor-sdk&quot;,&quot;version&quot;:&quot;0.1.154&quot;,&quot;debug&quot;:false}" src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/FollowCompany.html" class="IN-widget IN-widget--iframe" scrolling="no" allowtransparency="true" border="0" style="vertical-align: bottom; width: 82px; height: 43px;" width="1" height="1" frameborder="0"></iframe></span></li>
+
+              <li><div style="position: absolute; width: 450px; left: -10000px;" id="___follow_0"><iframe ng-non-bindable="" hspace="0" marginheight="0" marginwidth="0" scrolling="no" style="position:absolute;top:-10000px;width:450px;margin:0px;border-style:none" tabindex="0" vspace="0" id="I6_1625039628693" name="I6_1625039628693" src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/follow.html" data-gapiattached="true" width="100%" frameborder="0"></iframe></div><div class="g-follow" data-annotation="bubble" data-height="20" data-href="https://plus.google.com/116648719730180908239" data-rel="publisher" data-gapiscan="true" data-onload="true" data-gapistub="true"></div></li>
+              <li>facebook</li>
+              <li><div class="fb-follow" data-href="https://www.facebook.com/cloudurable/" data-layout="box_count" data-size="small" data-show-faces="false"></div></li>
+          </ul>
+</div>
+</div>
+
+
+
+
+<div class="panel panel-default sidebar-menu">
+
+    <div class="panel-heading">
+        <h3 class="panel-title">Categories</h3>
+    </div>
+
+    <div class="panel-body">
+        <ul class="nav nav-pills nav-stacked">
+            
+            <li><a href="http://cloudurable.com/categories/amazon-ebs/index.html">amazon-ebs (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/amazon-ec2/index.html">amazon-ec2 (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/amazon-vpc/index.html">amazon-vpc (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/ansible/index.html">ansible (4)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/avro/index.html">avro (2)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/aws/index.html">aws (4)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/aws-cassandra/index.html">aws-cassandra (6)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/aws-command-line/index.html">aws-command-line (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/brew/index.html">brew (2)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/cassandra/index.html">cassandra (12)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/cassandra-aws/index.html">cassandra-aws (3)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/cassandra-cluster/index.html">cassandra-cluster (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/cassandra-database/index.html">cassandra-database (2)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/cassandra-training/index.html">cassandra-training (5)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/cassandra-tutorial/index.html">cassandra-tutorial (5)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/cloud/index.html">cloud (4)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/cloudformation/index.html">cloudformation (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/cloudurable/index.html">cloudurable (15)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/cluster/index.html">cluster (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/devops/index.html">devops (16)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/ebs/index.html">ebs (3)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/ec2/index.html">ec2 (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/helm/index.html">helm (2)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/install/index.html">install (2)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/k8s/index.html">k8s (2)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/kafka/index.html">kafka (13)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/kafka-advanced-consumers/index.html">kafka-advanced-consumers (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/kafka-architecture/index.html">kafka-architecture (13)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/kafka-avro-serialization/index.html">kafka-avro-serialization (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/kafka-consulting/index.html">kafka-consulting (2)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/kafka-consumer/index.html">kafka-consumer (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/kafka-consumers/index.html">kafka-consumers (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/kafka-ecosystem/index.html">kafka-ecosystem (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/kafka-schema-registry/index.html">kafka-schema-registry (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/kafka-training/index.html">kafka-training (23)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/kafka-tutorial/index.html">kafka-tutorial (20)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/kaka-replication/index.html">kaka-replication (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/kinesis/index.html">kinesis (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/kinesis-consulting/index.html">kinesis-consulting (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/kubernetes/index.html">kubernetes (2)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/linux/index.html">linux (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/metricsd/index.html">metricsd (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/microservices/index.html">microservices (3)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/minikube/index.html">minikube (2)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/nodetool/index.html">nodetool (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/schema-registry/index.html">schema-registry (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/smack/index.html">smack (3)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/spark/index.html">spark (3)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/spark--cassandra/index.html">spark--cassandra (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/spark--kafka/index.html">spark--kafka (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/spark-training/index.html">spark-training (3)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/spark-tutorial/index.html">spark-tutorial (3)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/ssh/index.html">ssh (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/ssh-config/index.html">ssh-config (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/ssl/index.html">ssl (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/systemd/index.html">systemd (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/tls/index.html">tls (1)</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/categories/vagrant/index.html">vagrant (5)</a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<div class="panel sidebar-menu">
+    <div class="panel-heading">
+        <h3 class="panel-title">Tags</h3>
+    </div>
+
+    <div class="panel-body">
+        <ul class="tag-cloud">
+            
+            <li><a href="http://cloudurable.com/tags/akka/index.html"><i class="fa fa-tags"></i> akka</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/akka-consulting/index.html"><i class="fa fa-tags"></i> akka-consulting</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/amazon-ebs/index.html"><i class="fa fa-tags"></i> amazon-ebs</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/amazon-ec2/index.html"><i class="fa fa-tags"></i> amazon-ec2</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/ami/index.html"><i class="fa fa-tags"></i> ami</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/ansible/index.html"><i class="fa fa-tags"></i> ansible</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/avro/index.html"><i class="fa fa-tags"></i> avro</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/avro-kafka/index.html"><i class="fa fa-tags"></i> avro-kafka</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/aws/index.html"><i class="fa fa-tags"></i> aws</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/aws-cassandra/index.html"><i class="fa fa-tags"></i> aws-cassandra</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/aws-command-line/index.html"><i class="fa fa-tags"></i> aws-command-line</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/brew/index.html"><i class="fa fa-tags"></i> brew</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/cassandra/index.html"><i class="fa fa-tags"></i> cassandra</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/cassandra-architecture/index.html"><i class="fa fa-tags"></i> cassandra-architecture</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/cassandra-aws/index.html"><i class="fa fa-tags"></i> cassandra-aws</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/cassandra-cloud/index.html"><i class="fa fa-tags"></i> cassandra-cloud</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/cassandra-cluster/index.html"><i class="fa fa-tags"></i> cassandra-cluster</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/cassandra-database/index.html"><i class="fa fa-tags"></i> cassandra-database</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/cassandra-dba/index.html"><i class="fa fa-tags"></i> cassandra-dba</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/cassandra-devops/index.html"><i class="fa fa-tags"></i> cassandra-devops</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/cassandra-os-system-memory/index.html"><i class="fa fa-tags"></i> cassandra-os-system-memory</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/cassandra-training/index.html"><i class="fa fa-tags"></i> cassandra-training</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/cassandra-tutorial/index.html"><i class="fa fa-tags"></i> cassandra-tutorial</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/cloud/index.html"><i class="fa fa-tags"></i> cloud</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/cloudformation/index.html"><i class="fa fa-tags"></i> cloudformation</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/cloudformation-tutorial/index.html"><i class="fa fa-tags"></i> cloudformation-tutorial</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/cloudurable/index.html"><i class="fa fa-tags"></i> cloudurable</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/cluster/index.html"><i class="fa fa-tags"></i> cluster</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/compute/index.html"><i class="fa fa-tags"></i> compute</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/consumers/index.html"><i class="fa fa-tags"></i> consumers</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/dba/index.html"><i class="fa fa-tags"></i> dba</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/devops/index.html"><i class="fa fa-tags"></i> devops</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/ebs/index.html"><i class="fa fa-tags"></i> ebs</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/ec2/index.html"><i class="fa fa-tags"></i> ec2</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/ec2-instance-store/index.html"><i class="fa fa-tags"></i> ec2-instance-store</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/ecu/index.html"><i class="fa fa-tags"></i> ecu</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/failover/index.html"><i class="fa fa-tags"></i> failover</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/helm/index.html"><i class="fa fa-tags"></i> helm</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/images/index.html"><i class="fa fa-tags"></i> images</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/install/index.html"><i class="fa fa-tags"></i> install</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/instances/index.html"><i class="fa fa-tags"></i> instances</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/jms/index.html"><i class="fa fa-tags"></i> jms</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/k8s/index.html"><i class="fa fa-tags"></i> k8s</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/kafka/index.html"><i class="fa fa-tags"></i> kafka</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/kafka-advanced-consumers/index.html"><i class="fa fa-tags"></i> kafka-advanced-consumers</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/kafka-advanced-producers/index.html"><i class="fa fa-tags"></i> kafka-advanced-producers</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/kafka-architecture/index.html"><i class="fa fa-tags"></i> kafka-architecture</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/kafka-avro/index.html"><i class="fa fa-tags"></i> kafka-avro</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/kafka-connect/index.html"><i class="fa fa-tags"></i> kafka-connect</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/kafka-consulting/index.html"><i class="fa fa-tags"></i> kafka-consulting</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/kafka-consumers/index.html"><i class="fa fa-tags"></i> kafka-consumers</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/kafka-consumers-advanced/index.html"><i class="fa fa-tags"></i> kafka-consumers-advanced</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/kafka-ecosystem/index.html"><i class="fa fa-tags"></i> kafka-ecosystem</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/kafka-log-compaction/index.html"><i class="fa fa-tags"></i> kafka-log-compaction</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/kafka-rest-proxy/index.html"><i class="fa fa-tags"></i> kafka-rest-proxy</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/kafka-streams/index.html"><i class="fa fa-tags"></i> kafka-streams</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/kafka-training/index.html"><i class="fa fa-tags"></i> kafka-training</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/kafka-tutorial/index.html"><i class="fa fa-tags"></i> kafka-tutorial</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/kinesis/index.html"><i class="fa fa-tags"></i> kinesis</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/kinesis-consulting/index.html"><i class="fa fa-tags"></i> kinesis-consulting</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/kubernetes/index.html"><i class="fa fa-tags"></i> kubernetes</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/linux/index.html"><i class="fa fa-tags"></i> linux</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/metricsd/index.html"><i class="fa fa-tags"></i> metricsd</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/microservices/index.html"><i class="fa fa-tags"></i> microservices</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/microservices-architecture/index.html"><i class="fa fa-tags"></i> microservices-architecture</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/minikube/index.html"><i class="fa fa-tags"></i> minikube</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/nat/index.html"><i class="fa fa-tags"></i> nat</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/nodetool/index.html"><i class="fa fa-tags"></i> nodetool</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/numa/index.html"><i class="fa fa-tags"></i> numa</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/producers/index.html"><i class="fa fa-tags"></i> producers</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/qbit/index.html"><i class="fa fa-tags"></i> qbit</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/ram/index.html"><i class="fa fa-tags"></i> ram</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/reakt/index.html"><i class="fa fa-tags"></i> reakt</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/replication/index.html"><i class="fa fa-tags"></i> replication</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/schema-registry/index.html"><i class="fa fa-tags"></i> schema-registry</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/smack/index.html"><i class="fa fa-tags"></i> smack</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/spark/index.html"><i class="fa fa-tags"></i> spark</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/spark--cassandra/index.html"><i class="fa fa-tags"></i> spark--cassandra</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/spark-training/index.html"><i class="fa fa-tags"></i> spark-training</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/spark-tutorial/index.html"><i class="fa fa-tags"></i> spark-tutorial</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/ssh/index.html"><i class="fa fa-tags"></i> ssh</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/ssh-config/index.html"><i class="fa fa-tags"></i> ssh-config</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/ssl/index.html"><i class="fa fa-tags"></i> ssl</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/systemd/index.html"><i class="fa fa-tags"></i> systemd</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/tls/index.html"><i class="fa fa-tags"></i> tls</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/vagrant/index.html"><i class="fa fa-tags"></i> vagrant</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/vcpu/index.html"><i class="fa fa-tags"></i> vcpu</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/vpc/index.html"><i class="fa fa-tags"></i> vpc</a>
+            </li>
+            
+            <li><a href="http://cloudurable.com/tags/what-is-kafka/index.html"><i class="fa fa-tags"></i> what-is-kafka</a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+
+
+
+
+<br>
+<a href="http://cloudurable.com/spark-training/index.html" alt="Apache Spark onsite, instructor led training">Apache Spark Training</a>
+<br>
+<a href="http://cloudurable.com/blog/kafka-tutorial/index.html">Kafka Tutorial</a>
+<br>
+<a href="http://cloudurable.com/akka-consulting/index.html">Akka Consulting</a>
+<br>
+<a href="http://cloudurable.com/cassandra-course/index.html">Cassandra Training</a>
+<br>
+<a href="http://cloudurable.com/subscription_support_benefits_cassandra/index.html">AWS Cassandra Database Support</a>
+<br>
+<a href="http://cloudurable.com/subscription_support/index.html?q=kafka">Kafka Support Pricing</a>
+<br>
+<a href="http://cloudurable.com/subscription_support/index.html?q=cassandra">Cassandra Database Support Pricing</a>
+<br>
+<a href="http://cloudurable.com/cloudurable-cassandra-watchdog/index.html?q=cassandra">Non-stop Cassandra</a>
+<br>
+<a href="http://cloudurable.com/cloudurable-cassandra-watchdog/index.html?q=watchdog">Watchdog</a>
+<br>
+<a href="http://cloudurable.com/advantages/index.html">Advantages of using Cloudurable™</a>
+<br>
+<a href="http://cloudurable.com/service-quick-start-mentoring-cassandra-or-kafka-aws-ec2/index.html">Cassandra Consulting</a>
+<br>
+<a href="http://cloudurable.com/ppt/amazon-cassandra.pdf">Cloudurable™| Guide to AWS Cassandra Deploy</a>
+<br>
+<a href="http://cloudurable.com/ppt/amazon-cassandra-notes.pdf">Cloudurable™| AWS Cassandra Guidelines and Notes</a>
+<br>
+<a href="http://cloudurable.com/cassandra-aws-consulting/index.html">Free guide to deploying Cassandra on AWS</a>
+<br>
+<a href="http://cloudurable.com/kafka-training/index.html">Kafka Training</a>
+<br>
+<a href="http://cloudurable.com/kafka-aws-consulting/index.html">Kafka Consulting</a>
+<br>
+<a href="http://cloudurable.com/dynamodb-training/index.html">DynamoDB Training</a>
+<br>
+<a href="http://cloudurable.com/dynamodb-consulting/index.html">DynamoDB Consulting</a>
+<br>
+<a href="http://cloudurable.com/kinesis-training/index.html">Kinesis Training</a>
+<br>
+<a href="http://cloudurable.com/kinesis-consulting/index.html">Kinesis Consulting</a>
+<br>
+<a href="http://cloudurable.com/blog/kafka-tutorial-v1/index.html">Kafka Tutorial PDF</a>
+<br>
+<a href="http://cloudurable.com/kubernetes-security-training/index.html" alt="onsite, instructor led Kubernetes Security Training">Kubernetes Security Training</a>
+<br>
+<a href="http://cloudurable.com/redis-consulting/index.html" alt="Mentoring, Staff augmentation, Architecture Analysis and Consulting for Redis">
+  Redis Consulting</a>
+<br>
+<a href="http://cloudurable.com/redis-onsite-instructor-led-training/index.html" alt="Mentoring, Staff augmentation, Architecture Analysis and Consulting for Redis">
+  Redis Training</a>
+<br>
+<a href="http://cloudurable.com/elk-consulting/index.html" alt="Mentoring, Staff augmentation, Architecture Analysis and Consulting for ElasticSearch and ELK">
+  ElasticSearch / ELK Consulting</a>
+<br>
+<a href="http://cloudurable.com/elasticsearch-onsite-instructor-led-training/index.html" alt="Mentoring, Staff augmentation, Architecture Analysis and Consulting for ElasticSearch, ELK, and Kibana">
+  ElasticSearch Training</a>
+<br>
+
+<a href="http://cloudurable.com/influxdb-onsite-instructor-led-training/index.html" alt="Instructor led, on-site InfluxDB/TICK training including Telegraf, Chronograf and Kapacitor">
+InfluxDB/TICK Training
+</a>
+<a href="http://cloudurable.com/tick-consulting/index.html" alt="Mentoring, Staff augmentation, Architecture Analysis and Consulting for TICK, Telegraf, InlfluxDB, Chronograf/Grafana and Kapacitor">
+TICK Consulting
+</a>
+
+
+                        
+
+                    </div>
+                    
+
+                    
+
+                </div>
+                
+
+            </div>
+            
+        </div>
+        
+        <footer id="footer">
+
+
+
+    <div class="container">
+
+
+        
+        <div class="col-md-4 col-sm-6">
+            <h4>About us</h4>
+
+            <p>Cloudurable™: Leader in cloud computing (AWS, GKE, Azure)
+ for Kubernetes, Istio, Kafka™, Cassandra™ Database, Apache Spark, AWS 
+CloudFormation™ DevOps. We do <b>Cassandra training</b>, <b>Apache Spark</b>, <b>Kafka training</b>, <b>Kafka consulting</b> and <b>cassandra consulting</b> with a focus on AWS and data engineering. (<a href="http://cloudurable.com/faq/index.html">FAQ</a>)</p>
+
+            <hr class="hidden-md hidden-lg hidden-sm">
+
+
+            <h4>Follow Cloudurable™</h4>
+            <ul>
+              <li><a href="https://www.facebook.com/cloudurable" target="_blank">facebook page</a></li>
+              <li><a href="https://plus.google.com/116648719730180908239" target="_blank">google plus</a></li>
+              <li><a href="https://twitter.com/cloudurable" target="_blank">twitter</a></li>
+              <li><a href="https://www.linkedin.com/company/17964258/" target="_blank">linkedin</a></li>
+            </ul>
+
+
+            <em>Why Cloudurable™?</em>
+            <br>
+            <a href="http://cloudurable.com/advantages/index.html">Advantage of using Cloudurable™</a>
+            <br>
+
+            <em>About Cloudurable™?</em>
+            <br>
+            <a href="http://cloudurable.com/faq/index.html">About Cloudurable™</a>
+            <br>
+
+
+
+            <em>What are the benefits of using subscription support?</em>
+            <br>
+            <a href="http://cloudurable.com/subscription_support_benefits_cassandra/index.html">Benefits of Subscription Cassandra Support</a>
+            <br>
+
+
+
+
+        </div>
+        
+        
+
+        <div class="col-md-4 col-sm-6">
+
+            <h4>Recent posts</h4>
+
+            <div class="blog-entries">
+                
+                <div class="item same-height-row clearfix">
+                    <div class="image same-height-always" style="height: 50px;">
+                        <a href="http://cloudurable.com/blog/kubernetes_k8s_osx_setup_brew/index.html">
+                          
+                            <img src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/mech_lion.jpeg" class="img-responsive" alt="">
+                          
+                        </a>
+                    </div>
+                    <div class="name same-height-always" style="height: 50px;">
+                        <h5><a href="http://cloudurable.com/blog/kubernetes_k8s_osx_setup_brew/index.html">Set up Kubernetes on Mac: Minikube, Helm, etc.</a></h5>
+                    </div>
+                </div>
+                
+                <div class="item same-height-row clearfix">
+                    <div class="image same-height-always" style="height: 50px;">
+                        <a href="http://cloudurable.com/blog/kubernetes_k8s_kubectl_cheat_sheet/index.html">
+                          
+                            <img src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/mech_lion.jpeg" class="img-responsive" alt="">
+                          
+                        </a>
+                    </div>
+                    <div class="name same-height-always" style="height: 50px;">
+                        <h5><a href="http://cloudurable.com/blog/kubernetes_k8s_kubectl_cheat_sheet/index.html">kubectl cheatsheet (OSX/Mac)</a></h5>
+                    </div>
+                </div>
+                
+                <div class="item same-height-row clearfix">
+                    <div class="image same-height-always" style="height: 40px;">
+                        <a href="http://cloudurable.com/blog/kafka-advanced-consumer-1/index.html">
+                          
+                            <img src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/kafka.png" class="img-responsive" alt="">
+                          
+                        </a>
+                    </div>
+                    <div class="name same-height-always" style="height: 40px;">
+                        <h5><a href="http://cloudurable.com/blog/kafka-advanced-consumer-1/index.html">Kafka Consumer: Advanced Consumers</a></h5>
+                    </div>
+                </div>
+                
+                <div class="item same-height-row clearfix">
+                    <div class="image same-height-always" style="height: 40px;">
+                        <a href="http://cloudurable.com/blog/kafka-tutorial/index.html">
+                          
+                            <img src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/kafka.png" class="img-responsive" alt="">
+                          
+                        </a>
+                    </div>
+                    <div class="name same-height-always" style="height: 40px;">
+                        <h5><a href="http://cloudurable.com/blog/kafka-tutorial/index.html">Kafka Tutorial</a></h5>
+                    </div>
+                </div>
+                
+            </div>
+
+
+
+            <hr class="hidden-md hidden-lg">
+
+        </div>
+        
+
+        
+        <div class="col-md-4 col-sm-6">
+
+            <h4>Contact</h4>
+
+            <p><strong>Cloudurable Tech</strong>
+          <br>101 California Street
+          <br>San Francisco
+          <br>CA 94111
+          <br>USA
+          <br>
+          <strong>America</strong>
+          <br>
+          <a href="tel:14157581113">(415) 758-1113</a>
+        </p>
+        
+
+            <a href="http://cloudurable.com/contact/index.html" class="btn btn-small btn-template-main">Go to contact page</a>
+
+            <hr class="hidden-md hidden-lg hidden-sm">
+
+        </div>
+        
+        
+
+    </div>
+    
+</footer>
+
+
+
+
+
+
+
+<div id="copyright">
+    <div class="container">
+        <div class="col-md-12">
+            
+            <p class="pull-left">Copyright © 2015 - 2020, Cloudurable™, all rights reserved.
+             Streamline your Cassandra Database, Apache Spark and Kafka DevOps in AWS.
+             SMACK/Lambda architecture consutling! Spark, Mesos, Akka, Cassandra and Kafka in AWS.
+
+             <br>
+             <a href="http://cloudurable.com/spark-training/index.html" alt="onsite, instructor led Apache Spark Training">Apache Spark Training</a>,
+             <a href="http://cloudurable.com/kubernetes-security-training/index.html" alt="onsite, instructor led Kubernetes Security Training">Kubernetes Security Training</a>,
+             <a href="http://cloudurable.com/akka-consulting/index.html">Akka Consulting</a>,
+              <a href="http://cloudurable.com/subscription_support_benefits_cassandra/index.html">AWS Cassandra Support</a>,
+              <a href="http://cloudurable.com/cassandra-course/index.html">Cassandra Training</a>,
+              <a href="http://cloudurable.com/kafka-training/index.html">Kafka Training</a>,
+              <a href="http://cloudurable.com/service-architecture-analysis-cassandra-or-kafka-aws-ec2/index.html">Cassandra Consulting</a>,
+              <a href="http://cloudurable.com/kafka-aws-consulting/index.html">Kafka Consulting</a>,
+              <a href="http://cloudurable.com/spark-aws-emr-training/index.html">Spark Training</a>,
+              <a href="http://cloudurable.com/spark-aws-emr-consulting/index.html">Spark Consulting</a>,
+              <a href="http://cloudurable.com/blog/kafka-tutorial-v1/index.html">Kafka Tutorial</a>
+            </p>
+            
+            <p class="pull-right">
+              Template by <a href="https://github.com/devcows/hugo-universal-theme" target="_blank">DevCows</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<script>
+   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+   })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+   ga('create', 'UA-88810067-1', 'auto');
+   ga('send', 'pageview');
+
+</script>
+
+
+    </div>
+    
+
+    
+<script src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/jquery.js"></script>
+<script src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/bootstrap.js"></script>
+
+<script src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/jquery_003.js"></script>
+<script src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/waypoints.js"></script>
+<script src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/jquery_002.js"></script>
+<script src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/jquery-parallax.js"></script>
+<script src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/js"></script>
+<script src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/hpneo.js"></script>
+<script src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/gmaps.js"></script>
+<script src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/front.js"></script>
+
+
+<script src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/owl.js"></script>
+
+
+<script src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/in.js" type="text/javascript"> lang: en_US</script>
+<script src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/platform.js" async="" defer="defer" gapi_processed="true"></script>
+<script async="" src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/widgets.js" charset="utf-8"></script>
+
+
+<div id="fb-root" class=" fb_reset"><div style="position: absolute; top: -10000px; width: 0px; height: 0px;"><div></div></div></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+  
+
+<iframe scrolling="no" allowtransparency="true" src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/widget_iframe.html" title="Twitter settings iframe" style="display: none;" frameborder="0"></iframe><iframe name="oauth2relay270018287" id="oauth2relay270018287" src="Kafka%20Tutorial%20Using%20Kafka%20from%20the%20command%20line_files/postmessageRelay.html" style="width: 1px; height: 1px; position: absolute; top: -100px;" tabindex="-1" aria-hidden="true"></iframe><div id="fdfd755e-7993-4ac2-b500-0db0b8b48baf" class="IN-staging" style="display: none;"></div><iframe id="rufous-sandbox" scrolling="no" allowtransparency="true" allowfullscreen="true" style="position: absolute; visibility: hidden; display: none; width: 0px; height: 0px; padding: 0px; border: medium none;" title="Twitter analytics iframe" frameborder="0"></iframe></body></html>
