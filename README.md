@@ -51,6 +51,8 @@ https://www.knowledgehut.com/practice-tests/aws-solutions-architect-associate
 ## Jenkines
 ###### Declarative jenkines
 https://docs.cloudbees.com/docs/cloudbees-ci/latest/pipeline-syntax-reference-guide/declarative-pipeline
+###### install in mac os
+https://www.jenkins.io/download/lts/macos/
 ## Ansible
 https://clouddeepdive.medium.com/ansible-zero-to-hero-with-example-3348c1cd5d50
 ## Design patterns
