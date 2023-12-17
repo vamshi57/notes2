@@ -36,7 +36,8 @@ https://www.w3schools.com/react/react_lifecycle.asp
 https://medium.com/@AbidKazmi/all-react-hooks-in-one-short-4b0ed4b5a6e4
 ###### Interview questions
 https://github.com/sudheerj/reactjs-interview-questions
-
+###### React redux toolkit
+https://medium.com/edonec/redux-can-be-made-easier-with-redux-toolkit-b1d2d17b90ba
 ## Hibernates
 ## Devops
 ## AWS
