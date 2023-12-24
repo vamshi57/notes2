@@ -39,6 +39,8 @@ https://github.com/sudheerj/reactjs-interview-questions
 ###### React redux toolkit
 https://medium.com/edonec/redux-can-be-made-easier-with-redux-toolkit-b1d2d17b90ba
 git : https://github.com/OtayNacef/React-17-TypeScript-with-redux-toolkit
+Toolkit :-https://www.ifourtechnolab.com/blog/a-step-by-step-guide-on-using-redux-toolkit-with-react
+
 ## Hibernates
 ## Devops
 ## AWS
