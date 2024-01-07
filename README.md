@@ -64,6 +64,8 @@ https://clouddeepdive.medium.com/ansible-zero-to-hero-with-example-3348c1cd5d50
 ## Design patterns
 ## Python
 ## Leetcode
+## Go lang
+https://github.com/dariubs/GoBooks
 ###### All
 https://github.com/gouthampradhan/leetcode
 ###### Arrays
