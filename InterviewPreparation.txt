@@ -1,0 +1,83 @@
+Java:-
+========
+1) Basic concept 
+2) Exception Handling
+3) Multithreading
+4) FileHandling
+5) Inheritance
+6) Polymerphism
+7) Encapsulation
+
+Spring boot:-
+================
+1) Spring Core
+2) Spring boot Rest API
+3) Spring Data Jpa
+    All methods in crudrepository
+    Relationships
+    OneToMany
+    ManyToOne
+    OneToOne
+    ManyToMany
+
+4) Spring Security
+5) Spring Microservices
+6) Spring boot Aspect 
+
+React js:-
+==========
+1) Basic JavaScript
+2) Basic TypeScript
+3) React components
+4) Routing
+5) Hooks(useState,useEffect,useCallback,useMemo,useRef,useForwordRef)
+6) Context API
+7) Redux tool
+
+
+
+AWS:-
+========
+EC2 Instance
+  
+Autoscaling groups
+LoadBalance
+Route53
+Lambda
+Secret Manager
+RDS
+Networking
+  VPC,
+  Subnets,
+  private subnet,
+  public subnet,
+  availability zones,
+  nat gateway,
+  internet gateway,
+  routing table
+
+AMI(Amazon Machine Image)
+
+
+Splunk
+=======
+
+Bamboo
+=======
+
+
+Ansible:
+=======
+
+Jenkins
+=======
+
+Docker,Kubernates
+====================
+
+
+
+
+
+
+

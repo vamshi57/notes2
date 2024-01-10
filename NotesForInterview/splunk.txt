@@ -1,0 +1,85 @@
+Splunk
+===============
+1) why Splunk
+
+
+2) what is Splunk
+ It is a proprietary software used by companies to collect and analyze the data they produce.
+     Monitoring system performace
+     Data informed decision 
+     Security cognizance
+     Monitoring System health
+
+
+3) Splunk Architecture and components:-
+    Splunk has two type of Architectures
+    1) Single server env 
+         Single server is not used for actual deployment. A single component of splunk is installed to 
+         test splunk component of splunk is installed to test splunk component or to have a proof of concept or
+         personal use and learning
+
+    2) Distributed Server env
+
+ 
+
+
+4) splunk data pipeline
+
+
+
+5) splunk licensing
+
+
+6) Splunk components:- 
+    1) Processing components 
+       1) Forworders
+       2) Indexers
+       3) Search headers
+    2) Management components :-
+       1) Deployment server :- Manage all forworders
+       2) Indexer cluster master node :- Manages all Indexers
+       3) search head cluster :- Manager all search headers
+       4) License master :- 
+       5) Monitoring console:-
+
+
+Basic searches in splunk:-
+
+
+index="dev" resource_type="app" resource="*app*access*" status=200
+
+index="dev" resource_type="app" resource="*app*access*" | timechart count by status
+
+
+index="dev"  
+
+
+
+
+index=_internal sourcetype=splunkd component=Metrics 
+| stats count AS metric_count BY host 
+| join host type=left 
+        [search index=_audit sourcetype=audittrail  
+        | stats count AS audit_count BY host] 
+| table host metric_count audit_count 
+
+
+
+
+(index=_internal sourcetype=splunkd component=Metrics) OR (index=_audit sourcetype=audittrail) 
+| stats count(eval(sourcetype="splunkd")) AS metric_count count(eval(sourcetype="audittrail")) AS audit_count BY host
+
+Eval Documentation:-
+https://docs.splunk.com/Documentation/SCS/current/SearchReference/EvalCommandExamples
+
+
+
+| eval lowuser = lower(username)
+     
+| eval lowuser = lower('user-name')
+
+| eval sum_of_areas = pi() * pow(radius_a, 2) + pi() * pow(radius_b, 2)
+      
+| eval error_msg = case(error == 404, "Not found", error == 500, "Internal Server Error", error == 200, "OK")      
+
+| eval full_name = first_name+" "+last_name
