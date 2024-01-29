@@ -1,0 +1,5 @@
+long count()
+void delete(T entity)
+void deleteAll(iterable)
+void deleteAllById(iterable)
+void 

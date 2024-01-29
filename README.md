@@ -71,6 +71,9 @@ https://github.com/dariubs/GoBooks
 https://github.com/gouthampradhan/leetcode
 ###### Arrays
 https://medium.com/algorithms-and-leetcode/array-problems-on-leetcode-bb892201dd7f
+https://gobyexample.com/
+https://github.com/joncalhoun/algorithmswithgo.com/tree/master/module01
+https://courses.calhoun.io/signin
 ###### String
 ###### Hash Table
 ###### Dynamic Programming

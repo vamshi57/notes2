@@ -1,0 +1,23 @@
+Open Console/Command line --> 
+Go to your Jenkins installation directory 
+(very likely cd "C:\Program Files\Jenkins\"). Execute the following commands respectively:
+
+to stop:
+.\jenkins.exe stop
+
+to start:
+.\jenkins.exe start
+
+to restart:
+.\jenkins.exe restart
+
+
+
+All jenkins 
+https://gist.github.com/merikan/228cdb1893fca91f0663bab7b095757c
+
+## Jenkines
+https://github.com/iam-veeramalla/Jenkins-Zero-To-Hero/
+
+###  
+https://github.com/devopsjourney1/jenkins-101
